@@ -24,8 +24,8 @@ interface DailyEntryFormData {
     exercises: Array<{
       id: string;
       name: string;
-      weight: number;
-      reps: number;
+      weight: string;
+      reps: string;
       order: number;
     }>;
   };
@@ -144,8 +144,8 @@ export default function DailyEntryForm() {
   const handleExercisesChange = (exercises: Array<{
     id: string;
     name: string;
-    weight: number;
-    reps: number;
+    weight: string;
+    reps: string;
     order: number;
   }>) => {
     setFormData((prev) => ({
@@ -277,6 +277,7 @@ export default function DailyEntryForm() {
         {formData.gymSession.type && (
           <GymExerciseForm
             exercises={formData.gymSession.exercises}
+            sessionType={formData.gymSession.type}
             onChange={handleExercisesChange}
           />
         )}

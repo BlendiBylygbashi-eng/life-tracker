@@ -1,31 +1,37 @@
 'use client';
 
+import { EXERCISE_OPTIONS } from '@/lib/workoutData';
+import type { WorkoutType } from '@/lib/workoutData';
+
 interface Exercise {
   id: string;
   name: string;
-  weight: number;
-  reps: number;
+  weight: string;
+  reps: string;
   order: number;
 }
 
 interface GymExerciseFormProps {
   exercises: Exercise[];
+  sessionType: WorkoutType;
   onChange: (exercises: Exercise[]) => void;
 }
 
-export default function GymExerciseForm({ exercises, onChange }: GymExerciseFormProps) {
+export default function GymExerciseForm({ exercises, sessionType, onChange }: GymExerciseFormProps) {
+  const availableExercises = EXERCISE_OPTIONS[sessionType] || [];
+
   const addExercise = () => {
     const newExercise: Exercise = {
-      id: crypto.randomUUID(), // Generate a temporary ID for new exercises
+      id: crypto.randomUUID(),
       name: '',
-      weight: 0,
-      reps: 0,
+      weight: '',
+      reps: '',
       order: exercises.length,
     };
     onChange([...exercises, newExercise]);
   };
 
-  const updateExercise = (id: string, field: keyof Exercise, value: string | number) => {
+  const updateExercise = (id: string, field: keyof Exercise, value: string) => {
     onChange(
       exercises.map((exercise) =>
         exercise.id === id ? { ...exercise, [field]: value } : exercise
@@ -66,15 +72,23 @@ export default function GymExerciseForm({ exercises, onChange }: GymExerciseForm
               <label htmlFor={`name-${exercise.id}`} className="block text-sm font-medium text-gray-700 mb-1">
                 Exercise Name
               </label>
-              <input
-                type="text"
-                id={`name-${exercise.id}`}
-                value={exercise.name}
-                onChange={(e) => updateExercise(exercise.id, 'name', e.target.value)}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-sky-400 focus:border-transparent"
-                placeholder="e.g., Bench Press"
-                required
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  list={`exercises-${exercise.id}`}
+                  id={`name-${exercise.id}`}
+                  value={exercise.name}
+                  onChange={(e) => updateExercise(exercise.id, 'name', e.target.value)}
+                  className="w-full p-2 border rounded-md focus:ring-2 focus:ring-sky-400 focus:border-transparent"
+                  placeholder="Select or type exercise name"
+                  required
+                />
+                <datalist id={`exercises-${exercise.id}`}>
+                  {availableExercises.map((name) => (
+                    <option key={name} value={name} />
+                  ))}
+                </datalist>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -86,10 +100,11 @@ export default function GymExerciseForm({ exercises, onChange }: GymExerciseForm
                   type="number"
                   id={`weight-${exercise.id}`}
                   value={exercise.weight}
-                  onChange={(e) => updateExercise(exercise.id, 'weight', parseFloat(e.target.value))}
+                  onChange={(e) => updateExercise(exercise.id, 'weight', e.target.value)}
                   className="w-full p-2 border rounded-md focus:ring-2 focus:ring-sky-400 focus:border-transparent"
                   min="0"
                   step="0.5"
+                  placeholder="0"
                   required
                 />
               </div>
@@ -102,9 +117,10 @@ export default function GymExerciseForm({ exercises, onChange }: GymExerciseForm
                   type="number"
                   id={`reps-${exercise.id}`}
                   value={exercise.reps}
-                  onChange={(e) => updateExercise(exercise.id, 'reps', parseInt(e.target.value))}
+                  onChange={(e) => updateExercise(exercise.id, 'reps', e.target.value)}
                   className="w-full p-2 border rounded-md focus:ring-2 focus:ring-sky-400 focus:border-transparent"
                   min="0"
+                  placeholder="0"
                   required
                 />
               </div>

@@ -1,10 +1,10 @@
 'use client';
 
-export type GymSessionType = 'push' | 'pull' | 'legs' | 'other' | null;
+import { WORKOUT_TYPES, WorkoutType } from '@/lib/workoutData';
 
 interface GymSessionTypeSelectorProps {
-  value: GymSessionType;
-  onChange: (type: GymSessionType) => void;
+  value: WorkoutType | null;
+  onChange: (type: WorkoutType | null) => void;
 }
 
 export default function GymSessionTypeSelector({ value, onChange }: GymSessionTypeSelectorProps) {
@@ -13,7 +13,7 @@ export default function GymSessionTypeSelector({ value, onChange }: GymSessionTy
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Gym Session</h3>
       
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        {(['push', 'pull', 'legs', 'other'] as const).map((type) => (
+        {WORKOUT_TYPES.map((type) => (
           <button
             key={type}
             type="button"
