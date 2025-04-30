@@ -1,0 +1,50 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model DailyEntry {
+  id            String         @id @default(uuid())
+  date          DateTime
+  timeInOffice  Float
+  calories      Int
+  protein       Int
+  activities    String?       // Changed from reflection
+  improvements  String?       // New field
+  supplements   SupplementLog[]
+  gymSession    GymSession?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model SupplementLog {
+  id             String      @id @default(uuid())
+  entry          DailyEntry  @relation(fields: [entryId], references: [id])
+  entryId        String
+  supplementName String      // Will be either 'creatine', 'vitamin_c', or 'vitamin_d'
+  taken          Boolean
+}
+
+model GymSession {
+  id        String        @id @default(uuid())
+  entry     DailyEntry    @relation(fields: [entryId], references: [id])
+  entryId   String        @unique  // One-to-one with DailyEntry
+  type      String        // Will be either 'push', 'pull', 'legs', or 'other'
+  exercises GymExercise[]
+}
+
+model GymExercise {
+  id          String     @id @default(uuid())
+  session     GymSession @relation(fields: [sessionId], references: [id])
+  sessionId   String
+  name        String
+  weight      Float
+  reps        Int
+  order       Int
+}
