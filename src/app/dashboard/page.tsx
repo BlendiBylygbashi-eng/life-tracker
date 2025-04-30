@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { formatDistanceToNow } from 'date-fns';
 import CircularProgress from '@/components/ui/CircularProgress';
+import WeeklyOverview from '@/components/dashboard/WeeklyOverview';
 import { theme } from '@/styles/theme';
 
 // Constants for goals (same as in DailyEntryForm)
@@ -101,6 +102,11 @@ export default async function DashboardPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Weekly Overview Chart */}
+      <div className="mb-8">
+        <WeeklyOverview entries={entries} />
       </div>
 
       {/* Most Recent Entry Summary */}
