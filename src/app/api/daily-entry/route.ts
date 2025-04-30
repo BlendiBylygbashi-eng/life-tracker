@@ -13,6 +13,7 @@ export async function POST(request: Request) {
         timeInOffice: parseFloat(body.timeInOffice),
         calories: parseInt(body.calories),
         protein: parseInt(body.protein),
+        gripStrength: body.gripStrength ? parseFloat(body.gripStrength) : null,
         activities: body.dailyActivities,
         improvements: body.improvements,
         supplements: {

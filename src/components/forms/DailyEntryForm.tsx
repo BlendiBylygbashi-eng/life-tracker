@@ -12,6 +12,7 @@ interface DailyEntryFormData {
   timeInOffice: number;
   calories: number;
   protein: number;
+  gripStrength: string;
   dailyActivities: string;
   improvements: string;
   supplements: {
@@ -44,6 +45,7 @@ export default function DailyEntryForm() {
     timeInOffice: 0,
     calories: 0,
     protein: 0,
+    gripStrength: '',
     dailyActivities: '',
     improvements: '',
     supplements: {
@@ -92,6 +94,7 @@ export default function DailyEntryForm() {
         timeInOffice: 0,
         calories: 0,
         protein: 0,
+        gripStrength: '',
         dailyActivities: '',
         improvements: '',
         supplements: {
@@ -264,6 +267,27 @@ export default function DailyEntryForm() {
               required
             />
             <p className="mt-1 text-xs text-gray-500">Goal: {GOALS.protein}g</p>
+          </div>
+
+          {/* New grip strength field */}
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <div className="flex items-center justify-between mb-2">
+              <label htmlFor="gripStrength" className="block text-sm font-medium text-gray-700">
+                Grip Strength
+              </label>
+            </div>
+            <input
+              type="number"
+              id="gripStrength"
+              name="gripStrength"
+              value={formData.gripStrength}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-400 focus:border-transparent"
+              placeholder="0"
+              step="0.1"
+              min="0"
+            />
+            <p className="mt-1 text-xs text-gray-500">Measured in kg</p>
           </div>
         </div>
 
