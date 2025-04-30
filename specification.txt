@@ -1,0 +1,165 @@
+# 🧠 Personal Life Tracker MVP
+
+This is a personal full-stack project designed to track key aspects of my daily life in a modular, extensible, and visual way.
+
+> Built from scratch using vibe coding in [Cursor](https://www.cursor.so), with flexibility for the stack (e.g., Next.js, Flask, etc.) depending on what Cursor suggests.
+
+---
+
+## 📌 Goal
+
+Centralize daily tracking of gym activity, supplements, calorie/protein intake, office time, and personal reflections. The goal is a well-structured MVP with the ability to expand easily in future phases.
+
+---
+
+## ✅ Features for MVP
+
+Each **daily entry** will allow tracking of:
+
+### 1. **Time in Office**
+- Manual input (e.g., 7.5 hours)
+
+### 2. **Gym Session**
+- Type: Push / Pull / Legs / Other
+- Exercises:
+  - Name
+  - Weight (kg/lbs)
+  - Reps
+  - Order (i.e. 1st, 2nd, etc.)
+
+### 3. **Supplements Taken**
+- Creatine (yes/no)
+- Vitamin C (yes/no)
+- Vitamin D (yes/no)
+
+### 4. **Calorie & Protein Intake**
+- Calories (from CalAI)
+- Protein (grams)
+
+### 5. **Reflection**
+- Free text log of what I did today
+- Optionally: what could be improved
+
+---
+
+## 📊 Dashboard Requirements
+
+- Daily log list or calendar view
+- Graphs:
+  - Time in Office over time
+  - Calories & Protein over time
+  - Gym frequency (Push vs Pull vs Legs bar chart)
+- Optional: Supplement streak display (checkbox history)
+
+---
+
+## 🧱 Data Model (Schema)
+
+### `DailyEntry`
+| Field | Type |
+|-------|------|
+| id | UUID or int |
+| date | Date |
+| time_in_office | Float |
+| calories | Int |
+| protein | Int |
+| reflection | Text |
+
+### `SupplementLog`
+| Field | Type |
+|-------|------|
+| id | UUID |
+| entry_id | FK to DailyEntry |
+| supplement_name | Enum('creatine', 'vitamin_c', 'vitamin_d') |
+| taken | Boolean |
+
+### `GymSession`
+| Field | Type |
+|-------|------|
+| id | UUID |
+| entry_id | FK to DailyEntry |
+| type | Enum('push', 'pull', 'legs', 'other') |
+
+### `GymExercise`
+| Field | Type |
+|-------|------|
+| id | UUID |
+| session_id | FK to GymSession |
+| name | String |
+| weight | Float |
+| reps | Int |
+| order | Int |
+
+---
+
+## 🔧 Tech Stack
+
+To be determined with Cursor's suggestions.
+
+**Initial assumptions:**
+- Frontend: React / Next.js (or alternative)
+- Backend: Node.js (Express or Next API routes) or Flask
+- Database: SQLite for MVP, easy upgrade to Postgres later
+- Graphs: Chart.js, Recharts, or any other compatible lib
+- Styling: TailwindCSS or basic CSS
+
+---
+
+## 📦 Setup Instructions
+
+1. Initialize new project directory
+2. Install dependencies based on stack (to be suggested in Cursor)
+3. Set up database schema
+4. Build basic CRUD API routes:
+   - Create daily entry
+   - Add gym session and exercises
+   - Log supplements
+5. Build frontend form for daily entry
+6. Build dashboard views with graphs
+
+---
+
+## 🧩 Design Principles
+
+- **Modularity**: Each component or feature (supplements, gym, etc.) should be isolated
+- **Extensibility**: New fields can be added easily (e.g., mood tracking, sleep)
+- **Clarity**: Database schema and API types should be explicitly defined
+- **Visual Feedback**: Charts must be readable and intuitive
+- **Speed**: Must allow fast entry, especially for mobile (eventually)
+
+---
+
+## 🔮 Future Ideas
+
+- Integration with InBody app (body composition)
+- CalAI API ingestion
+- Daily/weekly streaks
+- Weekly summaries
+- Authentication (multi-user support)
+- Notifications & reminders
+- Export to CSV / Google Sheets
+- AI reflections ("here’s what you did well today")
+
+---
+
+## 📂 Suggested File Structure (for web-based app)
+/app /api /components /pages or /routes /models /lib /utils /public
+
+
+---
+
+## 🧠 Development Strategy
+
+- Start with data modeling and local database setup
+- Build basic API for creating & retrieving entries
+- Add frontend daily form with dynamic gym log
+- Integrate charts
+- Layer on dashboard views and styling
+- Polish UX for fast mobile data entry
+
+---
+
+## 🚀 Let's Build
+
+Start small, test early, and expand. Track, reflect, improve — every day.
+
