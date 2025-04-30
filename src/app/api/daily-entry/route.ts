@@ -23,9 +23,29 @@ export async function POST(request: Request) {
             { supplementName: 'vitamin_d', taken: body.supplements.vitaminD },
           ],
         },
+        ...(body.gymSession.type && {
+          gymSession: {
+            create: {
+              type: body.gymSession.type,
+              exercises: {
+                create: body.gymSession.exercises.map((exercise: any) => ({
+                  name: exercise.name,
+                  weight: parseFloat(exercise.weight),
+                  reps: parseInt(exercise.reps),
+                  order: exercise.order,
+                })),
+              },
+            },
+          },
+        }),
       },
       include: {
         supplements: true,
+        gymSession: {
+          include: {
+            exercises: true,
+          },
+        },
       },
     });
 
