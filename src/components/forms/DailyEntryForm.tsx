@@ -5,6 +5,7 @@ import CircularProgress from '../ui/CircularProgress';
 import { theme } from '@/styles/theme';
 import SupplementsSection from './SupplementForm';
 import GymSessionTypeSelector, { GymSessionType } from './GymSessionTypeSelector';
+import GymExerciseForm from './GymExerciseForm';
 
 interface DailyEntryFormData {
   date: string;
@@ -20,6 +21,13 @@ interface DailyEntryFormData {
   };
   gymSession: {
     type: GymSessionType;
+    exercises: Array<{
+      id: string;
+      name: string;
+      weight: number;
+      reps: number;
+      order: number;
+    }>;
   };
 }
 
@@ -45,6 +53,7 @@ export default function DailyEntryForm() {
     },
     gymSession: {
       type: null,
+      exercises: [], // Initialize empty exercises array
     },
   });
 
@@ -92,6 +101,7 @@ export default function DailyEntryForm() {
         },
         gymSession: {
           type: null,
+          exercises: [],
         },
       });
     } catch (error) {
@@ -127,6 +137,22 @@ export default function DailyEntryForm() {
       gymSession: {
         ...prev.gymSession,
         type,
+      },
+    }));
+  };
+
+  const handleExercisesChange = (exercises: Array<{
+    id: string;
+    name: string;
+    weight: number;
+    reps: number;
+    order: number;
+  }>) => {
+    setFormData((prev) => ({
+      ...prev,
+      gymSession: {
+        ...prev.gymSession,
+        exercises,
       },
     }));
   };
@@ -246,6 +272,14 @@ export default function DailyEntryForm() {
           value={formData.gymSession.type}
           onChange={handleGymSessionTypeChange}
         />
+
+        {/* Only show exercise form if a session type is selected */}
+        {formData.gymSession.type && (
+          <GymExerciseForm
+            exercises={formData.gymSession.exercises}
+            onChange={handleExercisesChange}
+          />
+        )}
 
         {/* Add Supplements Section before Daily Reflection */}
         <SupplementsSection
