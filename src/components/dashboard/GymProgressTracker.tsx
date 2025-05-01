@@ -199,18 +199,23 @@ export default function GymProgressTracker({ sessions }: GymProgressTrackerProps
             
             {/* Progress bar container */}
             <div className="relative h-2 bg-gray-100/60 rounded-full overflow-hidden backdrop-blur-[2px] mb-3">
-              <div className="absolute inset-0 flex">
-                {STRENGTH_LEVELS.map((_, index) => (
-                  <div 
-                    key={index}
-                    className="flex-1 border-r border-gray-200/60 last:border-0"
-                  />
-                ))}
-              </div>
+              {/* Progress bar */}
               <div 
                 className="absolute left-0 top-0 h-full bg-blue-500 transition-all duration-500"
                 style={{ width: `${progressPercentage}%` }}
               />
+              {/* Level separators - simple black lines */}
+              <div className="absolute inset-0 flex z-10">
+                {STRENGTH_LEVELS.map((_, index) => (
+                  <div 
+                    key={index}
+                    className="relative flex-1"
+                  >
+                    {/* Solid black separator line */}
+                    <div className="absolute right-0 top-0 h-full w-[2px] bg-black/30" />
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Level labels */}
