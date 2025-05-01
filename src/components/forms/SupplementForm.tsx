@@ -18,38 +18,29 @@ export default function SupplementsSection({ supplements, onChange }: Supplement
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Supplements Taken</h3>
-      <div className="space-y-3">
-        <label className="flex items-center space-x-3">
-          <input
-            type="checkbox"
-            checked={supplements.creatine}
-            onChange={() => handleChange('creatine')}
-            className="h-5 w-5 rounded border-gray-300 text-sky-400 focus:ring-sky-400"
-          />
-          <span className="text-gray-700">Creatine</span>
-        </label>
-
-        <label className="flex items-center space-x-3">
-          <input
-            type="checkbox"
-            checked={supplements.vitaminC}
-            onChange={() => handleChange('vitaminC')}
-            className="h-5 w-5 rounded border-gray-300 text-sky-400 focus:ring-sky-400"
-          />
-          <span className="text-gray-700">Vitamin C</span>
-        </label>
-
-        <label className="flex items-center space-x-3">
-          <input
-            type="checkbox"
-            checked={supplements.vitaminD}
-            onChange={() => handleChange('vitaminD')}
-            className="h-5 w-5 rounded border-gray-300 text-sky-400 focus:ring-sky-400"
-          />
-          <span className="text-gray-700">Vitamin D</span>
-        </label>
+    <div className="p-4 rounded-xl bg-gradient-to-br from-violet-50/40 to-purple-50/30 border border-violet-100/30 backdrop-blur-sm">
+      <h3 className="text-lg font-medium text-gray-900 mb-4">Supplements Taken</h3>
+      <div className="space-y-4">
+        {[
+          { id: 'creatine', label: 'Creatine', checked: supplements.creatine },
+          { id: 'vitaminC', label: 'Vitamin C', checked: supplements.vitaminC },
+          { id: 'vitaminD', label: 'Vitamin D', checked: supplements.vitaminD },
+        ].map(({ id, label, checked }) => (
+          <label 
+            key={id} 
+            className="flex items-center p-3 rounded-lg bg-white/40 hover:bg-white/60 border border-black/20 transition-all duration-300 cursor-pointer group"
+          >
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={() => handleChange(id as any)}
+              className="h-5 w-5 rounded-md border-violet-200 text-violet-500 focus:ring-violet-500 transition-colors"
+            />
+            <span className="ml-3 text-gray-700 font-medium group-hover:text-gray-900 transition-colors">
+              {label}
+            </span>
+          </label>
+        ))}
       </div>
     </div>
   );
