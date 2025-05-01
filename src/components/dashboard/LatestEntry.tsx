@@ -45,7 +45,7 @@ export default function LatestEntry({ entry }: LatestEntryProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="bg-white rounded-lg shadow-lg p-6 relative z-10">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold flex items-center gap-2">
           Latest Entry 

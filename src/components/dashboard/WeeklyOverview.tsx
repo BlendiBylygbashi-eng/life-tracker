@@ -140,7 +140,7 @@ export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="bg-white rounded-lg shadow-lg p-6 relative z-10">
       <h2 className="text-xl font-semibold mb-6">Weekly Overview</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-[1400px] mx-auto">
         <div className="aspect-[16/9] w-full max-h-[400px]">
