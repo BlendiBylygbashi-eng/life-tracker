@@ -15,6 +15,7 @@ model DailyEntry {
   timeInOffice  Float
   calories      Int
   protein       Int
+  bodyWeight    Float?        // Adding new field, optional in case you miss a day
   gripStrength  Float?        // Adding this new field, making it optional with ?
   activities    String?       // Changed from reflection
   improvements  String?       // New field

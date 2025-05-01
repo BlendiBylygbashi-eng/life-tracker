@@ -12,8 +12,9 @@ interface DailyEntryFormData {
   timeInOffice: number;
   calories: number;
   protein: number;
+  bodyWeight: string;
   gripStrength: string;
-  dailyActivities: string;
+  activities: string;
   improvements: string;
   supplements: {
     creatine: boolean;
@@ -45,8 +46,9 @@ export default function DailyEntryForm() {
     timeInOffice: 0,
     calories: 0,
     protein: 0,
+    bodyWeight: '',
     gripStrength: '',
-    dailyActivities: '',
+    activities: '',
     improvements: '',
     supplements: {
       creatine: false,
@@ -76,11 +78,16 @@ export default function DailyEntryForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          bodyWeight: formData.bodyWeight ? parseFloat(formData.bodyWeight) : null,
+          gripStrength: formData.gripStrength ? parseFloat(formData.gripStrength) : null,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save entry');
+        const errorData = await response.json();
+        throw new Error(errorData.details || 'Failed to save entry');
       }
 
       setSubmitStatus({
@@ -88,14 +95,15 @@ export default function DailyEntryForm() {
         message: 'Daily entry saved successfully!',
       });
 
-      // Optional: Reset form
+      // Reset form with correct field name
       setFormData({
         date: new Date().toISOString().split('T')[0],
         timeInOffice: 0,
         calories: 0,
         protein: 0,
+        bodyWeight: '',
         gripStrength: '',
-        dailyActivities: '',
+        activities: '',
         improvements: '',
         supplements: {
           creatine: false,
@@ -110,7 +118,7 @@ export default function DailyEntryForm() {
     } catch (error) {
       setSubmitStatus({
         type: 'error',
-        message: 'Failed to save entry. Please try again.',
+        message: error.message || 'Failed to save entry. Please try again.',
       });
     } finally {
       setIsSubmitting(false);
@@ -269,6 +277,23 @@ export default function DailyEntryForm() {
             <p className="mt-1 text-xs text-gray-500">Goal: {GOALS.protein}g</p>
           </div>
 
+          {/* Body Weight */}
+          <div className="bg-white p-4 rounded-lg shadow-sm">
+            <label htmlFor="bodyWeight" className="block text-sm font-medium text-gray-700 mb-1">
+              Body Weight (lbs)
+            </label>
+            <input
+              type="number"
+              id="bodyWeight"
+              name="bodyWeight"
+              value={formData.bodyWeight}
+              onChange={handleChange}
+              step="0.1"
+              className="w-full p-2 border border-gray-200 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              placeholder="Enter weight in lbs"
+            />
+          </div>
+
           {/* New grip strength field */}
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <div className="flex items-center justify-between mb-2">
@@ -317,18 +342,17 @@ export default function DailyEntryForm() {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Daily Reflection</h3>
           
           {/* Daily Activities */}
-          <div>
-            <label htmlFor="dailyActivities" className="block text-sm font-medium text-gray-700 mb-2">
-              What did you accomplish today?
+          <div className="mb-4">
+            <label htmlFor="activities" className="block text-sm font-medium text-gray-700 mb-1">
+              Daily Activities
             </label>
             <textarea
-              id="dailyActivities"
-              name="dailyActivities"
-              value={formData.dailyActivities}
+              id="activities"
+              name="activities"
+              value={formData.activities}
               onChange={handleChange}
-              rows={3}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
-              placeholder="List your main activities and achievements..."
+              rows={4}
+              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
             />
           </div>
 

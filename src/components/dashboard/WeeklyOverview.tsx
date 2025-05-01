@@ -31,6 +31,8 @@ interface DailyEntry {
   calories: number;
   protein: number;
   gripStrength: number | null;
+  bodyWeight: number | null;
+  createdAt: string;
 }
 
 interface WeeklyOverviewProps {
@@ -39,7 +41,14 @@ interface WeeklyOverviewProps {
 
 export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
   // Sort entries by date
-  const sortedEntries = [...entries].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const sortedEntries = [...entries].sort((a, b) => {
+    const dateCompare = new Date(a.date).getTime() - new Date(b.date).getTime();
+    if (dateCompare === 0) {
+      // If dates are the same, sort by creation time
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    }
+    return dateCompare;
+  });
 
   // Prepare data for the chart
   const labels = sortedEntries.map(entry => format(new Date(entry.date), 'MMM d'));
@@ -116,6 +125,18 @@ export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
     datasets: [{
       label: 'Grip Strength (kg)',
       data: sortedEntries.map(entry => entry.gripStrength),
+      borderColor: theme.colors.primary[500],
+      backgroundColor: theme.colors.primary[500] + '20',
+      tension: 0.4,
+      fill: true,
+    }]
+  };
+
+  const bodyWeightData = {
+    labels,
+    datasets: [{
+      label: 'Body Weight (lbs)',
+      data: sortedEntries.map(entry => entry.bodyWeight),
       borderColor: theme.colors.primary[500],
       backgroundColor: theme.colors.primary[500] + '20',
       tension: 0.4,
@@ -226,6 +247,31 @@ export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
                   }
                 }} 
                 data={gripStrengthData} 
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="aspect-[16/9] w-full max-h-[400px]">
+          <div className="h-full">
+            <h3 className="text-sm font-medium mb-2">Body Weight</h3>
+            <div className="h-[calc(100%-2rem)]">
+              <Line 
+                options={{
+                  ...commonOptions,
+                  scales: {
+                    ...commonOptions.scales,
+                    y: {
+                      ...commonOptions.scales.y,
+                      title: {
+                        display: true,
+                        text: 'Weight (lbs)',
+                        padding: { top: 10, bottom: 10 }
+                      }
+                    }
+                  }
+                }} 
+                data={bodyWeightData} 
               />
             </div>
           </div>

@@ -3,6 +3,8 @@ import { formatDistanceToNow } from 'date-fns';
 import CircularProgress from '@/components/ui/CircularProgress';
 import WeeklyOverview from '@/components/dashboard/WeeklyOverview';
 import { theme } from '@/styles/theme';
+import GymProgressTracker from '@/components/dashboard/GymProgressTracker';
+import GoalAchievement from '@/components/dashboard/GoalAchievement';
 
 // Constants for goals (same as in DailyEntryForm)
 const GOALS = {
@@ -25,7 +27,7 @@ async function getDashboardData() {
     orderBy: {
       createdAt: 'desc'
     },
-    take: 7 // Get last 7 days for recent history
+    take: 30  // Increased to get more history for PRs
   });
   
   await prisma.$disconnect();
@@ -54,6 +56,11 @@ export default async function DashboardPage() {
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
       
+      {/* Goal Achievement */}
+      <div className="mb-8">
+        <GoalAchievement entries={entries} />
+      </div>
+
       {/* Progress Rings */}
       <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
         <h2 className="text-xl font-semibold mb-6">Daily Goals Progress</h2>
@@ -109,6 +116,24 @@ export default async function DashboardPage() {
         <WeeklyOverview entries={entries} />
       </div>
 
+      {/* Gym Progress Tracker */}
+      <div className="mb-8">
+        <GymProgressTracker 
+          sessions={entries
+            .filter(entry => entry.gymSession)
+            .map(entry => ({
+              type: entry.gymSession!.type,
+              exercises: entry.gymSession!.exercises.map(ex => ({
+                name: ex.name,
+                weight: ex.weight,
+                reps: ex.reps,
+                date: entry.date,
+              })),
+              date: entry.date,
+            }))}
+        />
+      </div>
+
       {/* Most Recent Entry Summary */}
       <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
         <h2 className="text-xl font-semibold mb-4">
@@ -123,6 +148,9 @@ export default async function DashboardPage() {
               <p>Time in Office: {mostRecent.timeInOffice} hours</p>
               <p>Calories: {mostRecent.calories}</p>
               <p>Protein: {mostRecent.protein}g</p>
+              {mostRecent.bodyWeight && (
+                <p>Body Weight: {mostRecent.bodyWeight} lbs</p>
+              )}
               {mostRecent.gripStrength && (
                 <p>Grip Strength: {mostRecent.gripStrength}kg</p>
               )}

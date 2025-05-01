@@ -7,14 +7,18 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     
+    // Log the received data
+    console.log('Received body:', body);
+
     const dailyEntry = await prisma.dailyEntry.create({
       data: {
         date: new Date(body.date),
         timeInOffice: parseFloat(body.timeInOffice),
         calories: parseInt(body.calories),
         protein: parseInt(body.protein),
+        bodyWeight: body.bodyWeight ? parseFloat(body.bodyWeight) : null,
         gripStrength: body.gripStrength ? parseFloat(body.gripStrength) : null,
-        activities: body.dailyActivities,
+        activities: body.activities,
         improvements: body.improvements,
         supplements: {
           create: [
@@ -23,7 +27,7 @@ export async function POST(request: Request) {
             { supplementName: 'vitamin_d', taken: body.supplements.vitaminD },
           ],
         },
-        ...(body.gymSession.type && {
+        ...(body.gymSession?.type && {
           gymSession: {
             create: {
               type: body.gymSession.type,
@@ -52,8 +56,12 @@ export async function POST(request: Request) {
     return NextResponse.json(dailyEntry, { status: 201 });
   } catch (error) {
     console.error('Failed to create daily entry:', error);
+    // Return more detailed error information
     return NextResponse.json(
-      { error: 'Failed to create daily entry' },
+      { 
+        error: 'Failed to create daily entry',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
