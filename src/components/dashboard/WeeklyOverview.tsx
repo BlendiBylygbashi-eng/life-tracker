@@ -78,12 +78,16 @@ export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
   const timeData = {
     labels,
     datasets: [{
-      label: 'Time in Office (hours)',
+      label: 'Hours',
       data: sortedEntries.map(entry => entry.timeInOffice),
       borderColor: theme.colors.metrics.office,
-      backgroundColor: theme.colors.metrics.office + '20',
+      backgroundColor: `${theme.colors.metrics.office}15`,
       tension: 0.4,
       fill: true,
+      pointBackgroundColor: 'white',
+      pointBorderColor: theme.colors.metrics.office,
+      pointHoverBackgroundColor: theme.colors.metrics.office,
+      pointHoverBorderColor: 'white',
     }]
   };
 

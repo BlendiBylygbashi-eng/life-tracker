@@ -264,143 +264,155 @@ export default function DailyEntryForm({
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-lg shadow-md p-6">
-        {/* Metrics Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-gray-50 rounded-lg mb-6">
-          {/* Date field with updated styling */}
-          <div className="md:col-span-2">
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
-              Date
-            </label>
-            <input
-              type="date"
-              id="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-              required
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-8">
+        {/* Date field */}
+        <div className="mb-6">
+          <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+            Date
+          </label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+            required
+          />
+        </div>
 
-          {/* Metrics Grid */}
-          {/* Time in Office */}
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <label htmlFor="timeInOffice" className="block text-sm font-medium text-gray-700">
-                Time in Office
-              </label>
-              <CircularProgress
+        {/* Goal Metrics Section */}
+        <div>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Daily Goals</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Time in Office */}
+            <div className="relative p-4 rounded-xl bg-gradient-to-br from-blue-50/40 to-indigo-50/30 border border-blue-100/30">
+              <div className="flex items-center justify-between mb-4">
+                <label htmlFor="timeInOffice" className="block text-sm font-medium text-gray-700">
+                  Time in Office
+                </label>
+                <div className="w-16 h-16"> {/* Increased size */}
+                  <CircularProgress
+                    value={formData.timeInOffice}
+                    max={GOALS.timeInOffice}
+                    progressColor={theme.colors.metrics.office}
+                    size={64}  // Increased size
+                    strokeWidth={6}  // Adjusted stroke width
+                  />
+                </div>
+              </div>
+              <input
+                type="number"
+                id="timeInOffice"
+                name="timeInOffice"
                 value={formData.timeInOffice}
-                max={GOALS.timeInOffice}
-                progressColor={theme.colors.metrics.office}
-                size={32}
+                onChange={handleChange}
+                step="0.5"
+                min="0"
+                max="24"
+                className="w-full p-3 bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                required
               />
+              <p className="mt-2 text-sm text-gray-600">Goal: {GOALS.timeInOffice} hours</p>
             </div>
-            <input
-              type="number"
-              id="timeInOffice"
-              name="timeInOffice"
-              value={formData.timeInOffice}
-              onChange={handleChange}
-              step="0.5"
-              min="0"
-              max="24"
-              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-              required
-            />
-            <p className="mt-1 text-xs text-gray-500">Goal: {GOALS.timeInOffice} hours</p>
-          </div>
 
-          {/* Calories */}
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <label htmlFor="calories" className="block text-sm font-medium text-gray-700">
-                Calories
-              </label>
-              <CircularProgress
+            {/* Calories */}
+            <div className="relative p-4 rounded-xl bg-gradient-to-br from-red-50/40 to-pink-50/30 border border-red-100/30">
+              <div className="flex items-center justify-between mb-4">
+                <label htmlFor="calories" className="block text-sm font-medium text-gray-700">
+                  Calories
+                </label>
+                <div className="w-16 h-16"> {/* Increased size */}
+                  <CircularProgress
+                    value={formData.calories}
+                    max={GOALS.calories}
+                    progressColor={theme.colors.metrics.calories}
+                    isInverse={true}
+                    size={64}  // Increased size
+                    strokeWidth={6}  // Adjusted stroke width
+                  />
+                </div>
+              </div>
+              <input
+                type="number"
+                id="calories"
+                name="calories"
                 value={formData.calories}
-                max={GOALS.calories}
-                progressColor={theme.colors.metrics.calories}
-                isInverse={true}
-                size={32}
+                onChange={handleChange}
+                min="0"
+                className="w-full p-3 bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                required
               />
+              <p className="mt-2 text-sm text-gray-600">Goal: under {GOALS.calories} cal</p>
             </div>
-            <input
-              type="number"
-              id="calories"
-              name="calories"
-              value={formData.calories}
-              onChange={handleChange}
-              min="0"
-              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-              required
-            />
-            <p className="mt-1 text-xs text-gray-500">Goal: under {GOALS.calories} cal</p>
-          </div>
 
-          {/* Protein */}
-          <div className="bg-white p-4 rounded-lg shadow-sm md:col-span-2">
-            <div className="flex items-center justify-between mb-2">
-              <label htmlFor="protein" className="block text-sm font-medium text-gray-700">
-                Protein
-              </label>
-              <CircularProgress
+            {/* Protein */}
+            <div className="relative p-4 rounded-xl bg-gradient-to-br from-green-50/40 to-emerald-50/30 border border-green-100/30">
+              <div className="flex items-center justify-between mb-4">
+                <label htmlFor="protein" className="block text-sm font-medium text-gray-700">
+                  Protein
+                </label>
+                <div className="w-16 h-16"> {/* Increased size */}
+                  <CircularProgress
+                    value={formData.protein}
+                    max={GOALS.protein}
+                    progressColor={theme.colors.metrics.protein}
+                    size={64}  // Increased size
+                    strokeWidth={6}  // Adjusted stroke width
+                  />
+                </div>
+              </div>
+              <input
+                type="number"
+                id="protein"
+                name="protein"
                 value={formData.protein}
-                max={GOALS.protein}
-                progressColor={theme.colors.metrics.protein}
-                size={32}
+                onChange={handleChange}
+                min="0"
+                className="w-full p-3 bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                required
+              />
+              <p className="mt-2 text-sm text-gray-600">Goal: {GOALS.protein}g</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Other Measurements Section */}
+        <div className="mt-8">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Other Measurements</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Body Weight */}
+            <div className="p-4 rounded-xl bg-gray-50/50 border border-gray-100">
+              <label htmlFor="bodyWeight" className="block text-sm font-medium text-gray-700 mb-2">
+                Body Weight (lbs)
+              </label>
+              <input
+                type="number"
+                id="bodyWeight"
+                name="bodyWeight"
+                value={formData.bodyWeight}
+                onChange={handleChange}
+                placeholder="Enter weight in lbs"
+                className="w-full p-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all"
               />
             </div>
-            <input
-              type="number"
-              id="protein"
-              name="protein"
-              value={formData.protein}
-              onChange={handleChange}
-              min="0"
-              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-              required
-            />
-            <p className="mt-1 text-xs text-gray-500">Goal: {GOALS.protein}g</p>
-          </div>
 
-          {/* Body Weight */}
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <label htmlFor="bodyWeight" className="block text-sm font-medium text-gray-700 mb-1">
-              Body Weight (lbs)
-            </label>
-            <input
-              type="number"
-              id="bodyWeight"
-              name="bodyWeight"
-              value={formData.bodyWeight}
-              onChange={handleChange}
-              step="0.1"
-              className="w-full p-2 border border-gray-200 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              placeholder="Enter weight in lbs"
-            />
-          </div>
-
-          {/* New grip strength field */}
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <label htmlFor="gripStrength" className="block text-sm font-medium text-gray-700">
+            {/* Grip Strength */}
+            <div className="p-4 rounded-xl bg-gray-50/50 border border-gray-100">
+              <label htmlFor="gripStrength" className="block text-sm font-medium text-gray-700 mb-2">
                 Grip Strength
               </label>
+              <input
+                type="number"
+                id="gripStrength"
+                name="gripStrength"
+                value={formData.gripStrength}
+                onChange={handleChange}
+                placeholder="0"
+                className="w-full p-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all"
+              />
+              <p className="mt-1 text-xs text-gray-500">Measured in kg</p>
             </div>
-            <input
-              type="number"
-              id="gripStrength"
-              name="gripStrength"
-              value={formData.gripStrength}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-sky-400 focus:border-transparent"
-              placeholder="0"
-              step="0.1"
-              min="0"
-            />
-            <p className="mt-1 text-xs text-gray-500">Measured in kg</p>
           </div>
         </div>
 
