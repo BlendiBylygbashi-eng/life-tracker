@@ -4,6 +4,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { useState } from 'react';
 import type { DailyEntry } from '@/types/dashboard';
 import { useRouter } from 'next/navigation';
+import DailyEntryForm from '../forms/DailyEntryForm';
+import { Dialog } from '@headlessui/react';
 
 interface LatestEntryProps {
   entry: DailyEntry;
@@ -13,6 +15,7 @@ export default function LatestEntry({ entry }: LatestEntryProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this entry? This cannot be undone.')) {
@@ -50,22 +53,32 @@ export default function LatestEntry({ entry }: LatestEntryProps) {
             ({formatDistanceToNow(entry.date, { addSuffix: true })})
           </span>
         </h2>
-        <button
-          onClick={handleDelete}
-          disabled={isDeleting}
-          className="px-3 py-1 text-sm text-red-600 border border-red-200 rounded-full 
-                   hover:bg-red-50 transition-colors disabled:opacity-50 
-                   disabled:cursor-not-allowed flex items-center gap-1"
-        >
-          {isDeleting ? (
-            <>
-              <span className="w-3 h-3 border-2 border-red-600 border-t-transparent rounded-full animate-spin"/>
-              Deleting...
-            </>
-          ) : (
-            'Delete Entry'
-          )}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsEditing(true)}
+            className="px-3 py-1 text-sm text-blue-600 border border-blue-200 rounded-full 
+                     hover:bg-blue-50 transition-colors"
+          >
+            Edit Entry
+          </button>
+          
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="px-3 py-1 text-sm text-red-600 border border-red-200 rounded-full 
+                     hover:bg-red-50 transition-colors disabled:opacity-50 
+                     disabled:cursor-not-allowed flex items-center gap-1"
+          >
+            {isDeleting ? (
+              <>
+                <span className="w-3 h-3 border-2 border-red-600 border-t-transparent rounded-full animate-spin"/>
+                Deleting...
+              </>
+            ) : (
+              'Delete Entry'
+            )}
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -163,6 +176,31 @@ export default function LatestEntry({ entry }: LatestEntryProps) {
           <p className="text-gray-600 whitespace-pre-wrap">{entry.improvements}</p>
         </div>
       </div>
+
+      <Dialog
+        open={isEditing}
+        onClose={() => setIsEditing(false)}
+        className="relative z-40"
+      >
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="mx-auto max-w-3xl w-full bg-white rounded-xl shadow-lg">
+            <div className="max-h-[90vh] overflow-y-auto">
+              <DailyEntryForm
+                mode="edit"
+                initialData={entry}
+                onSuccess={() => {
+                  router.refresh();
+                  setTimeout(() => {
+                    setIsEditing(false);
+                  }, 1500);
+                }}
+              />
+            </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
     </div>
   );
 }

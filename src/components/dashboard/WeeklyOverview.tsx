@@ -150,7 +150,7 @@ export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
                     ...commonOptions.scales,
                     y: {
                       ...commonOptions.scales.y,
-                      max: 12,
+                      max: 14,
                       title: {
                         display: true,
                         text: 'Hours',

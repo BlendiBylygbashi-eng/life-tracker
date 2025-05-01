@@ -40,25 +40,68 @@ const GOALS = {
   protein: 205, // grams
 };
 
-export default function DailyEntryForm() {
-  const [formData, setFormData] = useState<DailyEntryFormData>({
-    date: new Date().toISOString().split('T')[0], // Today's date in YYYY-MM-DD format
-    timeInOffice: 0,
-    calories: 0,
-    protein: 0,
-    bodyWeight: '',
-    gripStrength: '',
-    activities: '',
-    improvements: '',
-    supplements: {
-      creatine: false,
-      vitaminC: false,
-      vitaminD: false,
-    },
-    gymSession: {
-      type: null,
-      exercises: [], // Initialize empty exercises array
-    },
+// Add these props
+interface DailyEntryFormProps {
+  initialData?: DailyEntry;  // For edit mode
+  onSuccess?: () => void;    // Callback after successful submit
+  mode?: 'create' | 'edit';  // To distinguish between create/edit modes
+}
+
+export default function DailyEntryForm({ 
+  initialData, 
+  onSuccess, 
+  mode = 'create' 
+}: DailyEntryFormProps) {
+  const [formData, setFormData] = useState<DailyEntryFormData>(() => {
+    if (initialData) {
+      return {
+        date: new Date(initialData.date).toISOString().split('T')[0],
+        timeInOffice: initialData.timeInOffice,
+        calories: initialData.calories,
+        protein: initialData.protein,
+        bodyWeight: initialData.bodyWeight?.toString() || '',
+        gripStrength: initialData.gripStrength?.toString() || '',
+        activities: initialData.activities || '',
+        improvements: initialData.improvements || '',
+        supplements: {
+          creatine: initialData.supplements.some(s => s.supplementName === 'creatine' && s.taken),
+          vitaminC: initialData.supplements.some(s => s.supplementName === 'vitamin_c' && s.taken),
+          vitaminD: initialData.supplements.some(s => s.supplementName === 'vitamin_d' && s.taken),
+        },
+        gymSession: initialData.gymSession ? {
+          type: initialData.gymSession.type as GymSessionType,
+          exercises: initialData.gymSession.exercises.map(ex => ({
+            id: ex.id,
+            name: ex.name,
+            weight: ex.weight.toString(),
+            reps: ex.reps.toString(),
+            order: ex.order,
+          })),
+        } : {
+          type: null,
+          exercises: [],
+        },
+      };
+    }
+    return {
+      date: new Date().toISOString().split('T')[0],
+      timeInOffice: 0,
+      calories: 0,
+      protein: 0,
+      bodyWeight: '',
+      gripStrength: '',
+      activities: '',
+      improvements: '',
+      supplements: {
+        creatine: false,
+        vitaminC: false,
+        vitaminD: false,
+      },
+      gymSession: {
+        type: null,
+        exercises: [],
+      },
+    };
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,17 +116,20 @@ export default function DailyEntryForm() {
     setSubmitStatus({ type: null, message: '' });
 
     try {
-      const response = await fetch('/api/daily-entry', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          bodyWeight: formData.bodyWeight ? parseFloat(formData.bodyWeight) : null,
-          gripStrength: formData.gripStrength ? parseFloat(formData.gripStrength) : null,
-        }),
-      });
+      const response = await fetch(
+        mode === 'edit' ? `/api/daily-entry/${initialData!.id}` : '/api/daily-entry',
+        {
+          method: mode === 'edit' ? 'PUT' : 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...formData,
+            bodyWeight: formData.bodyWeight ? parseFloat(formData.bodyWeight) : null,
+            gripStrength: formData.gripStrength ? parseFloat(formData.gripStrength) : null,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -92,29 +138,39 @@ export default function DailyEntryForm() {
 
       setSubmitStatus({
         type: 'success',
-        message: 'Daily entry saved successfully!',
+        message: `Daily entry ${mode === 'edit' ? 'updated' : 'saved'} successfully!`,
       });
 
-      // Reset form with correct field name
-      setFormData({
-        date: new Date().toISOString().split('T')[0],
-        timeInOffice: 0,
-        calories: 0,
-        protein: 0,
-        bodyWeight: '',
-        gripStrength: '',
-        activities: '',
-        improvements: '',
-        supplements: {
-          creatine: false,
-          vitaminC: false,
-          vitaminD: false,
-        },
-        gymSession: {
-          type: null,
-          exercises: [],
-        },
-      });
+      // Reduce wait time to 1 second before triggering onSuccess
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      // Only reset form in create mode
+      if (mode === 'create') {
+        setFormData({
+          date: new Date().toISOString().split('T')[0],
+          timeInOffice: 0,
+          calories: 0,
+          protein: 0,
+          bodyWeight: '',
+          gripStrength: '',
+          activities: '',
+          improvements: '',
+          supplements: {
+            creatine: false,
+            vitaminC: false,
+            vitaminD: false,
+          },
+          gymSession: {
+            type: null,
+            exercises: [],
+          },
+        });
+      }
+
     } catch (error) {
       setSubmitStatus({
         type: 'error',
@@ -169,12 +225,44 @@ export default function DailyEntryForm() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto p-6">
       {/* Header Section */}
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Daily Entry</h1>
-        <p className="text-gray-600">Track your daily progress and reflections</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          {mode === 'edit' ? 'Edit Entry' : 'Daily Entry'}
+        </h1>
+        <p className="text-gray-600">
+          {mode === 'edit' ? 'Update your daily progress and reflections' : 'Track your daily progress and reflections'}
+        </p>
       </div>
+
+      {/* Status Message */}
+      {submitStatus.type && (
+        <div 
+          className={`
+            fixed top-4 left-1/2 transform -translate-x-1/2 z-50
+            mb-6 px-6 py-3 rounded-lg text-center font-medium shadow-lg
+            transition-all duration-300 ease-in-out
+            ${submitStatus.type === 'success' 
+              ? 'bg-green-100 text-green-800 border-2 border-green-300' 
+              : 'bg-red-100 text-red-800 border-2 border-red-300'
+            }
+          `}
+        >
+          <div className="flex items-center justify-center space-x-2">
+            {submitStatus.type === 'success' ? (
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
+              </svg>
+            )}
+            <span>{submitStatus.message}</span>
+          </div>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-lg shadow-md p-6">
         {/* Metrics Section */}
@@ -373,31 +461,25 @@ export default function DailyEntryForm() {
           </div>
         </div>
 
-        {/* Add status message */}
-        {submitStatus.type && (
-          <div
-            className={`mt-4 p-4 rounded-lg ${
-              submitStatus.type === 'success'
-                ? 'bg-green-50 text-green-800'
-                : 'bg-red-50 text-red-800'
-            }`}
+        {/* Update the submit button to show loading state */}
+        <div className="flex justify-end mt-6">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+                     transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed
+                     flex items-center gap-2"
           >
-            {submitStatus.message}
-          </div>
-        )}
-
-        {/* Update submit button to show loading state */}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`w-full bg-sky-400 text-white py-3 px-4 rounded-lg transition-colors duration-200 font-medium shadow-sm hover:shadow-md ${
-            isSubmitting
-              ? 'opacity-50 cursor-not-allowed'
-              : 'hover:bg-sky-500'
-          }`}
-        >
-          {isSubmitting ? 'Saving...' : 'Save Daily Entry'}
-        </button>
+            {isSubmitting ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"/>
+                {mode === 'edit' ? 'Saving Changes...' : 'Saving Entry...'}
+              </>
+            ) : (
+              mode === 'edit' ? 'Save Changes' : 'Save Daily Entry'
+            )}
+          </button>
+        </div>
       </form>
     </div>
   );
