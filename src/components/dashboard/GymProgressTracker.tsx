@@ -29,6 +29,9 @@ ChartJS.register(
   Legend
 );
 
+// Constants
+const STRENGTH_LEVELS = ['Beginner', 'Novice', 'Intermediate', 'Advanced', 'Elite'];
+
 interface Exercise {
   name: string;
   weight: number;
@@ -177,97 +180,108 @@ export default function GymProgressTracker({ sessions }: GymProgressTrackerProps
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .find(session => session.bodyWeight)?.bodyWeight;
 
+  // Calculate progress percentage based on current level
+  const progressPercentage = 60; // This should be calculated based on your logic
+
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6">
       <h2 className="text-xl font-semibold mb-6">Strength Progress</h2>
-      
-      {/* Add Strength Standards section */}
+
+      {/* Strength Standards */}
       <div className="mb-8">
-        <StrengthStandards 
-          personalRecords={personalRecords}
-          bodyWeight={latestBodyWeight || 0}
-        />
-      </div>
-
-      <h3 className="text-lg font-semibold mb-4">Personal Records</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        {exerciseNames.map(exerciseName => {
-          const pr = personalRecords[exerciseName];
-          if (!pr) return null;
-
-          const isSelected = selectedExercise === exerciseName;
-
-          return (
-            <div 
-              key={exerciseName}
-              className={`p-4 rounded-lg border transition-colors ${
-                isSelected 
-                  ? 'border-primary-500 bg-primary-50' 
-                  : 'border-gray-200'
-              }`}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-medium text-gray-900">{exerciseName}</h3>
-                <button
-                  onClick={() => handleCardClick(exerciseName)}
-                  className="p-1 rounded-full hover:bg-gray-100 transition-colors"
-                  title={isSelected ? "Hide progress graph" : "Show progress graph"}
-                >
-                  {isSelected ? (
-                    <ChevronUpIcon className="w-5 h-5 text-primary-500" />
-                  ) : (
-                    <ChevronDownIcon className="w-5 h-5 text-gray-400 hover:text-primary-500" />
-                  )}
-                </button>
-              </div>
-              <div className="space-y-1 text-sm">
-                <p className="text-gray-600">
-                  Weight: <span className="text-gray-900 font-medium">{pr.weight} lbs</span>
-                </p>
-                <p className="text-gray-600">
-                  Reps: <span className="text-gray-900 font-medium">{pr.reps}</span>
-                </p>
-                <p className="text-gray-600">
-                  Estimated 1RM: <span className="text-gray-900 font-medium">
-                    {Math.round(pr.oneRepMax)} lbs
-                  </span>
-                </p>
-                <p className="text-gray-500 text-xs mt-2">
-                  Set on {formatDate(pr.date)}
-                </p>
-              </div>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Strength Standards</h3>
+        <div className="space-y-6">
+          <div className="p-4 rounded-xl bg-gradient-to-br from-blue-50/40 to-indigo-50/30 border border-blue-100/30">
+            <div className="flex justify-between items-center mb-2">
+              <h4 className="font-medium">Flat Bench Press</h4>
+              <span className="text-sm font-semibold text-blue-600">Intermediate</span>
             </div>
-          );
-        })}
-      </div>
-
-      {/* PR Progression Chart - Updated with better animations */}
-      <div 
-        className={`mt-8 overflow-hidden transition-all duration-300 ease-in-out ${
-          selectedExercise 
-            ? 'max-h-[500px] opacity-100' 
-            : 'max-h-0 opacity-0'
-        }`}
-      >
-        {selectedExercise && (
-          <div className="transform transition-all duration-300 ease-out">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">
-                {selectedExercise} - PR Progression
-              </h3>
-              <button
-                onClick={() => setSelectedExercise(null)}
-                className="text-sm text-gray-500 hover:text-primary-500 flex items-center gap-1"
-              >
-                <ChevronUpIcon className="w-4 h-4" />
-                Hide Graph
-              </button>
+            
+            {/* Progress bar container */}
+            <div className="relative h-2 bg-gray-100/60 rounded-full overflow-hidden backdrop-blur-[2px] mb-3">
+              <div className="absolute inset-0 flex">
+                {STRENGTH_LEVELS.map((_, index) => (
+                  <div 
+                    key={index}
+                    className="flex-1 border-r border-gray-200/60 last:border-0"
+                  />
+                ))}
+              </div>
+              <div 
+                className="absolute left-0 top-0 h-full bg-blue-500 transition-all duration-500"
+                style={{ width: `${progressPercentage}%` }}
+              />
             </div>
-            <div className="h-[400px]">
-              <Line data={chartData} options={chartOptions} />
+
+            {/* Level labels */}
+            <div className="flex justify-between text-xs text-gray-500">
+              {STRENGTH_LEVELS.map(level => (
+                <span key={level}>{level}</span>
+              ))}
+            </div>
+
+            {/* Stats */}
+            <div className="mt-4 space-y-1">
+              <div className="text-sm text-gray-600">Current 1RM: <span className="font-medium text-gray-900">230lbs</span></div>
+              <div className="text-sm text-gray-600">Body Weight: <span className="font-medium text-gray-900">208lbs</span></div>
+              <div className="text-sm text-gray-600">Ratio: <span className="font-medium text-gray-900">1.10x BW</span></div>
             </div>
           </div>
-        )}
+        </div>
+      </div>
+
+      {/* Personal Records */}
+      <div>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Personal Records</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {exerciseNames.map(exerciseName => {
+            const pr = personalRecords[exerciseName];
+            if (!pr) return null;
+
+            return (
+              <div key={exerciseName} className="p-4 rounded-xl bg-gradient-to-br from-gray-50/40 to-gray-100/30 border border-gray-100/30 hover:shadow-md transition-all duration-300">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium text-gray-900">{exerciseName}</h4>
+                  <button 
+                    onClick={() => handleCardClick(exerciseName)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    {selectedExercise === exerciseName ? (
+                      <ChevronUpIcon className="w-5 h-5" />
+                    ) : (
+                      <ChevronDownIcon className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Weight:</span>
+                    <span className="font-medium text-gray-900">{pr.weight} lbs</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Reps:</span>
+                    <span className="font-medium text-gray-900">{pr.reps}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Estimated 1RM:</span>
+                    <span className="font-medium text-gray-900">{Math.round(pr.oneRepMax)} lbs</span>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-2">
+                    Set on {format(new Date(pr.date), 'MMM d')}
+                  </div>
+                </div>
+
+                {/* Chart section that appears when card is selected */}
+                {selectedExercise === exerciseName && chartData && (
+                  <div className="mt-4 h-[200px]">
+                    <Line options={chartOptions} data={chartData} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
