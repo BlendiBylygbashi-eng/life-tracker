@@ -15,6 +15,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { format } from 'date-fns';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import type { GymSession } from '@/types/dashboard';
 import StrengthStandards from './StrengthStandards';
 
 // Register ChartJS components
@@ -33,14 +34,6 @@ interface Exercise {
   weight: number;
   reps: number;
   date: string;
-  createdAt: string;
-}
-
-interface GymSession {
-  type: string;
-  exercises: Exercise[];
-  date: string;
-  bodyWeight?: number | null;
   createdAt: string;
 }
 

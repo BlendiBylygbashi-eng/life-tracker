@@ -1,13 +1,7 @@
 'use client';
 
 import { theme } from '@/styles/theme';
-
-interface DailyEntry {
-  timeInOffice: number;
-  calories: number;
-  protein: number;
-  date: string;
-}
+import type { DailyEntry } from '@/types/dashboard';
 
 interface GoalAchievementProps {
   entries: DailyEntry[];

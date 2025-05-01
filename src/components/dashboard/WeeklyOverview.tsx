@@ -13,6 +13,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { format } from 'date-fns';
 import { theme } from '@/styles/theme';
+import type { DailyEntry } from '@/types/dashboard';
 
 // Register ChartJS components
 ChartJS.register(
@@ -24,16 +25,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-interface DailyEntry {
-  date: string;
-  timeInOffice: number;
-  calories: number;
-  protein: number;
-  gripStrength: number | null;
-  bodyWeight: number | null;
-  createdAt: string;
-}
 
 interface WeeklyOverviewProps {
   entries: DailyEntry[];
