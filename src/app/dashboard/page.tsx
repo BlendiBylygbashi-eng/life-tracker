@@ -64,50 +64,53 @@ export default async function DashboardPage() {
       </div>
 
       {/* Progress Rings */}
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 mb-8">
         <h2 className="text-xl font-semibold mb-6">Daily Goals Progress</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
-          <div className="text-center">
+          {/* Individual ring containers */}
+          <div className="text-center p-6 rounded-xl bg-gradient-to-br from-blue-50/40 to-indigo-50/30 border border-blue-100/30 shadow-sm hover:shadow-md transition-all duration-300 backdrop-blur-sm w-full max-w-[200px]">
             <CircularProgress
               value={mostRecent.timeInOffice}
               max={GOALS.timeInOffice}
               size={120}
-              strokeWidth={10}
+              strokeWidth={12}
               progressColor={theme.colors.metrics.office}
-              backgroundColor="#E5E7EB"
+              backgroundColor="rgba(229, 231, 235, 0.5)"
             />
-            <div className="mt-2">
-              <div className="font-medium">Office Time</div>
-              <div className="text-sm text-gray-600">{mostRecent.timeInOffice}h / {GOALS.timeInOffice}h</div>
+            <div className="mt-4">
+              <div className="font-medium text-gray-900">Office Time</div>
+              <div className="text-sm text-gray-600 mt-1">{mostRecent.timeInOffice}h / {GOALS.timeInOffice}h</div>
             </div>
           </div>
-          <div className="text-center">
+
+          <div className="text-center p-6 rounded-xl bg-gradient-to-br from-red-50/40 to-pink-50/30 border border-red-100/30 shadow-sm hover:shadow-md transition-all duration-300 backdrop-blur-sm w-full max-w-[200px]">
             <CircularProgress
               value={mostRecent.calories}
               max={GOALS.calories}
               size={120}
-              strokeWidth={10}
+              strokeWidth={12}
               progressColor={theme.colors.metrics.calories}
-              backgroundColor="#E5E7EB"
+              backgroundColor="rgba(229, 231, 235, 0.5)"
               isInverse={true}
             />
-            <div className="mt-2">
-              <div className="font-medium">Calories</div>
-              <div className="text-sm text-gray-600">{mostRecent.calories} / {GOALS.calories}</div>
+            <div className="mt-4">
+              <div className="font-medium text-gray-900">Calories</div>
+              <div className="text-sm text-gray-600 mt-1">{mostRecent.calories} / {GOALS.calories}</div>
             </div>
           </div>
-          <div className="text-center">
+
+          <div className="text-center p-6 rounded-xl bg-gradient-to-br from-green-50/40 to-emerald-50/30 border border-green-100/30 shadow-sm hover:shadow-md transition-all duration-300 backdrop-blur-sm w-full max-w-[200px]">
             <CircularProgress
               value={mostRecent.protein}
               max={GOALS.protein}
               size={120}
-              strokeWidth={10}
+              strokeWidth={12}
               progressColor={theme.colors.metrics.protein}
-              backgroundColor="#E5E7EB"
+              backgroundColor="rgba(229, 231, 235, 0.5)"
             />
-            <div className="mt-2">
-              <div className="font-medium">Protein</div>
-              <div className="text-sm text-gray-600">{mostRecent.protein}g / {GOALS.protein}g</div>
+            <div className="mt-4">
+              <div className="font-medium text-gray-900">Protein</div>
+              <div className="text-sm text-gray-600 mt-1">{mostRecent.protein}g / {GOALS.protein}g</div>
             </div>
           </div>
         </div>
