@@ -130,6 +130,8 @@ export default async function DashboardPage() {
                 date: entry.date,
               })),
               date: entry.date,
+              bodyWeight: entry.bodyWeight,
+              createdAt: entry.createdAt
             }))}
         />
       </div>

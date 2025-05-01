@@ -15,6 +15,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { format } from 'date-fns';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import StrengthStandards from './StrengthStandards';
 
 // Register ChartJS components
 ChartJS.register(
@@ -32,12 +33,15 @@ interface Exercise {
   weight: number;
   reps: number;
   date: string;
+  createdAt: string;
 }
 
 interface GymSession {
   type: string;
   exercises: Exercise[];
   date: string;
+  bodyWeight?: number | null;
+  createdAt: string;
 }
 
 interface GymProgressTrackerProps {
@@ -81,17 +85,31 @@ export default function GymProgressTracker({ sessions }: GymProgressTrackerProps
       .flatMap(session =>
         session.exercises
           .filter(exercise => exercise.name === exerciseName)
-          .map(exercise => ({
-            ...exercise,
-            oneRepMax: calculateOneRepMax(exercise.weight, exercise.reps),
-            date: session.date,
-          }))
+          .map(exercise => {
+            const oneRepMax = calculateOneRepMax(exercise.weight, exercise.reps);
+            console.log(`Exercise: ${exercise.name}`);
+            console.log(`Weight: ${exercise.weight}, Reps: ${exercise.reps}`);
+            console.log(`Calculated 1RM: ${oneRepMax}`);
+            return {
+              ...exercise,
+              oneRepMax,
+              date: session.date,
+              createdAt: session.createdAt,
+            };
+          })
       )
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      .sort((a, b) => {
+        const dateCompare = new Date(a.date).getTime() - new Date(b.date).getTime();
+        if (dateCompare === 0) {
+          // If dates are the same, sort by creation time
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        }
+        return dateCompare;
+      });
 
     acc[exerciseName] = exerciseInstances;
     return acc;
-  }, {} as Record<string, Array<{ weight: number; reps: number; oneRepMax: number; date: string; }>>);
+  }, {} as Record<string, Array<{ weight: number; reps: number; oneRepMax: number; date: string; createdAt: string; }>>);
 
   // Calculate PRs (keep existing PR calculation code)
   const personalRecords = exerciseNames.reduce((acc, exerciseName) => {
@@ -117,9 +135,11 @@ export default function GymProgressTracker({ sessions }: GymProgressTrackerProps
     datasets: [
       {
         label: 'Estimated 1RM (lbs)',
-        data: exerciseHistory[selectedExercise].map(instance => 
-          Math.round(instance.oneRepMax)
-        ),
+        data: exerciseHistory[selectedExercise].map(instance => {
+          const oneRepMax = Math.round(instance.oneRepMax);
+          console.log(`Plotting 1RM for ${selectedExercise}: ${oneRepMax}`);
+          return oneRepMax;
+        }),
         borderColor: theme.colors.primary[500],
         backgroundColor: theme.colors.primary[500] + '20',
         tension: 0.4,
@@ -159,10 +179,24 @@ export default function GymProgressTracker({ sessions }: GymProgressTrackerProps
     },
   };
 
+  // Get the most recent body weight
+  const latestBodyWeight = sessions
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .find(session => session.bodyWeight)?.bodyWeight;
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-xl font-semibold mb-6">Personal Records</h2>
+      <h2 className="text-xl font-semibold mb-6">Strength Progress</h2>
       
+      {/* Add Strength Standards section */}
+      <div className="mb-8">
+        <StrengthStandards 
+          personalRecords={personalRecords}
+          bodyWeight={latestBodyWeight || 0}
+        />
+      </div>
+
+      <h3 className="text-lg font-semibold mb-4">Personal Records</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         {exerciseNames.map(exerciseName => {
           const pr = personalRecords[exerciseName];
