@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CircularProgress from '../ui/CircularProgress';
 import { theme } from '@/styles/theme';
 import SupplementsSection from './SupplementForm';
@@ -47,6 +47,8 @@ interface DailyEntryFormProps {
   mode?: 'create' | 'edit';  // To distinguish between create/edit modes
 }
 
+const STORAGE_KEY = 'daily-entry-form-data';
+
 export default function DailyEntryForm({ 
   initialData, 
   onSuccess, 
@@ -83,6 +85,18 @@ export default function DailyEntryForm({
         },
       };
     }
+
+    if (typeof window !== 'undefined') {
+      const savedData = localStorage.getItem(STORAGE_KEY);
+      if (savedData) {
+        try {
+          return JSON.parse(savedData);
+        } catch (e) {
+          console.error('Failed to parse saved form data:', e);
+        }
+      }
+    }
+
     return {
       date: new Date().toISOString().split('T')[0],
       timeInOffice: 0,
@@ -103,6 +117,12 @@ export default function DailyEntryForm({
       },
     };
   });
+
+  useEffect(() => {
+    if (mode === 'create') {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    }
+  }, [formData, mode]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
@@ -141,14 +161,16 @@ export default function DailyEntryForm({
         message: `Daily entry ${mode === 'edit' ? 'updated' : 'saved'} successfully!`,
       });
 
-      // Reduce wait time to 1 second before triggering onSuccess
+      if (mode === 'create') {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       if (onSuccess) {
         onSuccess();
       }
 
-      // Only reset form in create mode
       if (mode === 'create') {
         setFormData({
           date: new Date().toISOString().split('T')[0],
@@ -170,8 +192,7 @@ export default function DailyEntryForm({
           },
         });
       }
-
-    } catch (error) {
+    } catch (error: any) {
       setSubmitStatus({
         type: 'error',
         message: error.message || 'Failed to save entry. Please try again.',
