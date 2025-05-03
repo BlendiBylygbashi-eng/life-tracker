@@ -180,60 +180,19 @@ export default function GymProgressTracker({ sessions }: GymProgressTrackerProps
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .find(session => session.bodyWeight)?.bodyWeight;
 
-  // Calculate progress percentage based on current level
-  const progressPercentage = 60; // This should be calculated based on your logic
-
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6">
       <h2 className="text-xl font-semibold mb-6">Strength Progress</h2>
 
       {/* Strength Standards */}
-      <div className="mb-8">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Strength Standards</h3>
-        <div className="space-y-6">
-          <div className="p-4 rounded-xl bg-gradient-to-br from-blue-50/40 to-indigo-50/30 border border-blue-100/30">
-            <div className="flex justify-between items-center mb-2">
-              <h4 className="font-medium">Flat Bench Press</h4>
-              <span className="text-sm font-semibold text-blue-600">Intermediate</span>
-            </div>
-            
-            {/* Progress bar container */}
-            <div className="relative h-2 bg-gray-100/60 rounded-full overflow-hidden backdrop-blur-[2px] mb-3">
-              {/* Progress bar */}
-              <div 
-                className="absolute left-0 top-0 h-full bg-blue-500 transition-all duration-500"
-                style={{ width: `${progressPercentage}%` }}
-              />
-              {/* Level separators - simple black lines */}
-              <div className="absolute inset-0 flex z-10">
-                {STRENGTH_LEVELS.map((_, index) => (
-                  <div 
-                    key={index}
-                    className="relative flex-1"
-                  >
-                    {/* Solid black separator line */}
-                    <div className="absolute right-0 top-0 h-full w-[2px] bg-black/30" />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Level labels */}
-            <div className="flex justify-between text-xs text-gray-500">
-              {STRENGTH_LEVELS.map(level => (
-                <span key={level}>{level}</span>
-              ))}
-            </div>
-
-            {/* Stats */}
-            <div className="mt-4 space-y-1">
-              <div className="text-sm text-gray-600">Current 1RM: <span className="font-medium text-gray-900">230lbs</span></div>
-              <div className="text-sm text-gray-600">Body Weight: <span className="font-medium text-gray-900">208lbs</span></div>
-              <div className="text-sm text-gray-600">Ratio: <span className="font-medium text-gray-900">1.10x BW</span></div>
-            </div>
-          </div>
+      {latestBodyWeight && (
+        <div className="mb-8">
+          <StrengthStandards 
+            personalRecords={personalRecords}
+            bodyWeight={latestBodyWeight}
+          />
         </div>
-      </div>
+      )}
 
       {/* Personal Records */}
       <div>
