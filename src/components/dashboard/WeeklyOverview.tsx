@@ -33,16 +33,18 @@ interface WeeklyOverviewProps {
 export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
   // Sort entries by date
   const sortedEntries = [...entries].sort((a, b) => {
-    const dateCompare = new Date(a.date).getTime() - new Date(b.date).getTime();
-    if (dateCompare === 0) {
-      // If dates are the same, sort by creation time
-      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-    }
-    return dateCompare;
+    // Use createdAt directly since it already contains both date and time
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
   });
 
-  // Prepare data for the chart
-  const labels = sortedEntries.map(entry => format(new Date(entry.date), 'MMM d'));
+  // Simplify the label creation
+  const sortedEntriesWithTimestamp = sortedEntries.map((entry) => ({
+    ...entry,
+    displayLabel: format(new Date(entry.createdAt), 'MMM d HH:mm')
+  }));
+
+  // Update the labels line to use our new displayLabel
+  const labels = sortedEntriesWithTimestamp.map(entry => entry.displayLabel);
 
   const commonOptions = {
     responsive: true,
@@ -74,12 +76,12 @@ export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
     },
   };
 
-  // Create separate datasets for each metric
+  // Update each dataset to use the same ordered array
   const timeData = {
     labels,
     datasets: [{
       label: 'Hours',
-      data: sortedEntries.map(entry => entry.timeInOffice),
+      data: sortedEntriesWithTimestamp.map(entry => entry.timeInOffice),
       borderColor: theme.colors.metrics.office,
       backgroundColor: `${theme.colors.metrics.office}15`,
       tension: 0.4,
@@ -95,7 +97,7 @@ export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
     labels,
     datasets: [{
       label: 'Calories',
-      data: sortedEntries.map(entry => entry.calories),
+      data: sortedEntriesWithTimestamp.map(entry => entry.calories),
       borderColor: theme.colors.metrics.calories,
       backgroundColor: theme.colors.metrics.calories + '20',
       tension: 0.4,
@@ -107,7 +109,7 @@ export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
     labels,
     datasets: [{
       label: 'Protein (g)',
-      data: sortedEntries.map(entry => entry.protein),
+      data: sortedEntriesWithTimestamp.map(entry => entry.protein),
       borderColor: theme.colors.metrics.protein,
       backgroundColor: theme.colors.metrics.protein + '20',
       tension: 0.4,
@@ -119,7 +121,7 @@ export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
     labels,
     datasets: [{
       label: 'Grip Strength (kg)',
-      data: sortedEntries.map(entry => entry.gripStrength),
+      data: sortedEntriesWithTimestamp.map(entry => entry.gripStrength),
       borderColor: theme.colors.primary[500],
       backgroundColor: theme.colors.primary[500] + '20',
       tension: 0.4,
@@ -131,7 +133,7 @@ export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
     labels,
     datasets: [{
       label: 'Body Weight (lbs)',
-      data: sortedEntries.map(entry => entry.bodyWeight),
+      data: sortedEntriesWithTimestamp.map(entry => entry.bodyWeight),
       borderColor: theme.colors.primary[500],
       backgroundColor: theme.colors.primary[500] + '20',
       tension: 0.4,

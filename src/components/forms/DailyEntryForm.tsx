@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import CircularProgress from '../ui/CircularProgress';
 import { theme } from '@/styles/theme';
 import SupplementsSection from './SupplementForm';
-import GymSessionTypeSelector, { GymSessionType } from './GymSessionTypeSelector';
+import GymSessionTypeSelector from './GymSessionTypeSelector';
+import type { WorkoutType } from '@/lib/workoutData';
 import GymExerciseForm from './GymExerciseForm';
+import type { DailyEntry } from '@/types/dashboard';
 
 interface DailyEntryFormData {
   date: string;
@@ -22,7 +24,7 @@ interface DailyEntryFormData {
     vitaminD: boolean;
   };
   gymSession: {
-    type: GymSessionType;
+    type: WorkoutType | null;
     exercises: Array<{
       id: string;
       name: string;
@@ -71,7 +73,7 @@ export default function DailyEntryForm({
           vitaminD: initialData.supplements.some(s => s.supplementName === 'vitamin_d' && s.taken),
         },
         gymSession: initialData.gymSession ? {
-          type: initialData.gymSession.type as GymSessionType,
+          type: initialData.gymSession.type as WorkoutType,
           exercises: initialData.gymSession.exercises.map(ex => ({
             id: ex.id,
             name: ex.name,
@@ -90,7 +92,14 @@ export default function DailyEntryForm({
       const savedData = localStorage.getItem(STORAGE_KEY);
       if (savedData) {
         try {
-          return JSON.parse(savedData);
+          const parsed = JSON.parse(savedData);
+          return {
+            ...parsed,
+            gymSession: parsed.gymSession || {  // Ensure gymSession exists
+              type: null,
+              exercises: [],
+            },
+          };
         } catch (e) {
           console.error('Failed to parse saved form data:', e);
         }
@@ -219,7 +228,7 @@ export default function DailyEntryForm({
     }));
   };
 
-  const handleGymSessionTypeChange = (type: GymSessionType) => {
+  const handleGymSessionTypeChange = (type: WorkoutType) => {
     setFormData((prev) => ({
       ...prev,
       gymSession: {

@@ -81,27 +81,14 @@ export default function GymProgressTracker({ sessions }: GymProgressTrackerProps
       .flatMap(session =>
         session.exercises
           .filter(exercise => exercise.name === exerciseName)
-          .map(exercise => {
-            const oneRepMax = calculateOneRepMax(exercise.weight, exercise.reps);
-            console.log(`Exercise: ${exercise.name}`);
-            console.log(`Weight: ${exercise.weight}, Reps: ${exercise.reps}`);
-            console.log(`Calculated 1RM: ${oneRepMax}`);
-            return {
-              ...exercise,
-              oneRepMax,
-              date: session.date,
-              createdAt: session.createdAt,
-            };
-          })
+          .map(exercise => ({
+            ...exercise,
+            oneRepMax: calculateOneRepMax(exercise.weight, exercise.reps),
+            date: new Date(session.date).toISOString(),
+            createdAt: new Date(session.createdAt).toISOString()
+          }))
       )
-      .sort((a, b) => {
-        const dateCompare = new Date(a.date).getTime() - new Date(b.date).getTime();
-        if (dateCompare === 0) {
-          // If dates are the same, sort by creation time
-          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-        }
-        return dateCompare;
-      });
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
     acc[exerciseName] = exerciseInstances;
     return acc;
@@ -117,7 +104,7 @@ export default function GymProgressTracker({ sessions }: GymProgressTrackerProps
       weight: prInstance.weight,
       reps: prInstance.reps,
       oneRepMax: maxOneRepMax,
-      date: prInstance.date,
+      date: format(new Date(prInstance.date), 'MMM d'),
     } : null;
 
     return acc;
@@ -131,11 +118,7 @@ export default function GymProgressTracker({ sessions }: GymProgressTrackerProps
     datasets: [
       {
         label: 'Estimated 1RM (lbs)',
-        data: exerciseHistory[selectedExercise].map(instance => {
-          const oneRepMax = Math.round(instance.oneRepMax);
-          console.log(`Plotting 1RM for ${selectedExercise}: ${oneRepMax}`);
-          return oneRepMax;
-        }),
+        data: exerciseHistory[selectedExercise].map(instance => Math.round(instance.oneRepMax)),
         borderColor: theme.colors.primary[500],
         backgroundColor: theme.colors.primary[500] + '20',
         tension: 0.4,
