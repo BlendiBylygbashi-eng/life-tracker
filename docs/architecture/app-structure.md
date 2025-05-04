@@ -3,24 +3,24 @@
 ## 🌳 High-Level Directory Structure
 
 ```text
-├── .next/                  # 🔧 Build output from Next.js
-├── node_modules/          # 📦 Installed dependencies
-├── prisma/               # 🧬 Prisma schema and DB migrations
-│   └── schema.prisma    # - Defines your database models
-├── public/              # 🖼 Static files (images, icons, etc.)
-├── src/                # 💡 Main application source code
-│   ├── app/           # 🚏 Next.js 13+ App Router (routes like /dashboard)
-│   ├── components/    # 🧩 All reusable UI components
-│   │   ├── ui/       # - Generic UI elements (e.g. Navbar, Buttons)
-│   │   ├── forms/    # - Daily entry form components
-│   │   └── dashboard/ # - Dashboard visual and graph components
-│   └── lib/          # 🧠 Business logic, utilities, and DB client
-│       ├── prisma.ts # - Prisma Client instance
-│       ├── calculations.ts # - Utility calculations (e.g. streaks, goals)
-│       └── workoutData.ts # - Predefined workouts/exercises
-├── package.json        # 📄 Project metadata and scripts
-├── tailwind.config.ts  # 🎨 Tailwind CSS configuration
-└── tsconfig.json      # ⚙️ TypeScript configuration
+├── .next/                    # 🔧 Build output from Next.js
+├── node_modules/             # 📦 Installed dependencies
+├── prisma/                   # 🧬 Prisma schema and DB migrations
+│   └── schema.prisma         # - Defines your database models
+├── public/                   # 🖼 Static files (images, icons, etc.)
+├── src/                      # 💡 Main application source code
+│   ├── app/                  # 🚏 Next.js 13+ App Router (routes like /dashboard)
+│   ├── components/           # 🧩 All reusable UI components
+│   │   ├── ui/               # - Generic UI elements (e.g. Navbar, Buttons)
+│   │   ├── forms/            # - Daily entry form components
+│   │   └── dashboard/        # - Dashboard visual and graph components
+│   └── lib/                  # 🧠 Business logic, utilities, and DB client
+│       ├── prisma.ts         # - Prisma Client instance
+│       ├── calculations.ts   # - Utility calculations (e.g. streaks, goals)
+│       └── workoutData.ts    # - Predefined workouts/exercises
+├── package.json              # 📄 Project metadata and scripts
+├── tailwind.config.ts        # 🎨 Tailwind CSS configuration
+└── tsconfig.json             # ⚙️ TypeScript configuration
 ```
 
 
