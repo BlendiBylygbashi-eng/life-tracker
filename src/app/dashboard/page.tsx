@@ -6,7 +6,7 @@ import { theme } from '@/styles/theme';
 import GymProgressTracker from '@/components/dashboard/GymProgressTracker';
 import GoalAchievement from '@/components/dashboard/GoalAchievement';
 import type { DailyEntry, GymSession } from '@/types/dashboard';
-import LatestEntry from '@/components/dashboard/LatestEntry';
+import EntryViewerContainer from '@/components/dashboard/EntryViewerContainer';
 
 // Constants for goals (same as in DailyEntryForm)
 const GOALS = {
@@ -142,8 +142,8 @@ export default async function DashboardPage() {
         />
       </div>
 
-      {/* Latest Entry */}
-      <LatestEntry entry={mostRecent} />
+      {/* Entry Viewer */}
+      <EntryViewerContainer entries={entries} />
     </div>
   );
 }

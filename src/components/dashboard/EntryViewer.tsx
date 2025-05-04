@@ -1,21 +1,36 @@
 'use client';
 
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { useState } from 'react';
 import type { DailyEntry } from '@/types/dashboard';
 import { useRouter } from 'next/navigation';
 import DailyEntryForm from '../forms/DailyEntryForm';
 import { Dialog } from '@headlessui/react';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
-interface LatestEntryProps {
-  entry: DailyEntry;
+interface EntryViewerProps {
+  entries: DailyEntry[];
+  currentIndex: number;
+  onNavigate: (index: number) => void;
 }
 
-export default function LatestEntry({ entry }: LatestEntryProps) {
+export default function EntryViewer({ entries, currentIndex, onNavigate }: EntryViewerProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
+
+  if (!entries || entries.length === 0 || !entries[currentIndex]) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-6 relative z-10">
+        <p className="text-gray-500">No entries available</p>
+      </div>
+    );
+  }
+
+  const entry = entries[currentIndex];
+  const isFirst = currentIndex === 0;
+  const isLast = currentIndex === entries.length - 1;
 
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this entry? This cannot be undone.')) {
@@ -47,12 +62,30 @@ export default function LatestEntry({ entry }: LatestEntryProps) {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 relative z-10">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
-          Latest Entry 
-          <span className="text-sm font-normal text-gray-500">
-            ({formatDistanceToNow(entry.date, { addSuffix: true })})
-          </span>
-        </h2>
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-semibold flex items-center gap-2">
+            Entry {entries.length - currentIndex} of {entries.length}
+            <span className="text-sm font-normal text-gray-500">
+              ({formatDistanceToNow(entry.date, { addSuffix: true })}: {format(new Date(entry.date), 'MMM d, yyyy')})
+            </span>
+          </h2>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onNavigate(currentIndex + 1)}
+              disabled={isLast}
+              className="p-1 text-gray-600 hover:text-gray-900 disabled:text-gray-300 disabled:cursor-not-allowed"
+            >
+              <ChevronLeftIcon className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => onNavigate(currentIndex - 1)}
+              disabled={isFirst}
+              className="p-1 text-gray-600 hover:text-gray-900 disabled:text-gray-300 disabled:cursor-not-allowed"
+            >
+              <ChevronRightIcon className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsEditing(true)}
