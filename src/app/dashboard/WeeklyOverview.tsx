@@ -96,7 +96,7 @@ export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="bg-white rounded-lg shadow-lg p-6 relative z-10">
       <h2 className="text-xl font-semibold mb-6">Weekly Overview</h2>
       <div className="w-full h-[400px]">
         <Line options={options} data={data} />
