@@ -1,0 +1,1 @@
+export { BaseGoalCard } from './BaseGoalCard';
