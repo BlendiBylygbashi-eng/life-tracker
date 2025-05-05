@@ -81,7 +81,22 @@ src/
 │   │   │   │   └── dataTransformers.ts (24 lines)
 │   │   │   ├── WeeklyOverview.tsx (56 lines)
 │   │   │   └── index.ts (2 lines)
-│   │   ├── GoalAchievement.tsx (256 lines) ⚠️
+│   │   ├── goal-achievement/            // New modular structure
+│   │   │   ├── cards/                   // Card components
+│   │   │   │   ├── BaseGoalCard.tsx (62 lines)
+│   │   │   │   ├── TimeGoalCard.tsx (36 lines)
+│   │   │   │   ├── CaloriesGoalCard.tsx (36 lines)
+│   │   │   │   ├── ProteinGoalCard.tsx (36 lines)
+│   │   │   │   ├── GymGoalCard.tsx (34 lines)
+│   │   │   │   └── index.ts (6 lines)
+│   │   │   ├── utils/                   // Shared utilities
+│   │   │   │   ├── goalConfig.ts (9 lines)
+│   │   │   │   ├── statsCalculators.ts (48 lines)
+│   │   │   │   ├── gymSessionUtils.ts (43 lines)
+│   │   │   │   ├── types.ts (26 lines)
+│   │   │   │   └── index.ts (5 lines)
+│   │   │   ├── GoalAchievement.tsx (62 lines)
+│   │   │   └── index.ts (2 lines)
 │   │   ├── GymProgressTracker.tsx (236 lines) ⚠️
 │   │   ├── EntryViewer.tsx (240 lines) ⚠️
 │   │   ├── EntryViewerContainer.tsx (22 lines)
@@ -164,8 +179,13 @@ src/components/forms/
 - [x] Separate chart configurations
 - [x] Implement data transformers
 
+✓ GoalAchievement Component
+- [x] Extract common card pattern into BaseGoalCard
+- [x] Create individual goal cards
+- [x] Separate utility functions
+- [x] Improve type safety with shared interfaces
+
 Remaining Components to Refactor:
-- [ ] GoalAchievement.tsx
 - [ ] GymProgressTracker.tsx
 - [ ] EntryViewer.tsx
 
@@ -183,4 +203,11 @@ Remaining Components to Refactor:
 - Reduced main component from 280 to 56 lines
 - Created reusable chart components
 - Implemented shared utilities and configurations
+- Improved type safety and maintainability
+
+### [Current Date] Post-GoalAchievement Refactor
+- Modularized GoalAchievement component
+- Reduced main component from 256 to 62 lines
+- Created reusable BaseGoalCard pattern
+- Implemented shared utilities and goal configurations
 - Improved type safety and maintainability
