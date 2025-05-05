@@ -4,7 +4,7 @@ import CircularProgress from '@/components/ui/CircularProgress';
 import { WeeklyOverview } from '@/components/dashboard/weekly-overview';
 import { theme } from '@/styles/theme';
 import GymProgressTracker from '@/components/dashboard/GymProgressTracker';
-import GoalAchievement from '@/components/dashboard/GoalAchievement';
+import { GoalAchievement } from '@/components/dashboard/goal-achievement';
 import type { DailyEntry, GymSession } from '@/types/dashboard';
 import EntryViewerContainer from '@/components/dashboard/EntryViewerContainer';
 
