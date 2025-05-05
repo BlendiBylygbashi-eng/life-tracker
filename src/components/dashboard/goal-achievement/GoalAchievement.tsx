@@ -2,116 +2,20 @@
 
 import { theme } from '@/styles/theme';
 import type { DailyEntry } from '@/types/dashboard';
+import {
+  GOALS,
+  calculateGoalStats,
+  calculateCurrentStreaks,
+  getWeeklyGymSessions
+} from './utils';
 
 interface GoalAchievementProps {
   entries: DailyEntry[];
 }
 
-// Constants for goals (same as in DailyEntryForm)
-const GOALS = {
-  timeInOffice: 9, // hours
-  calories: 2273, // max calories
-  protein: 205, // grams
-  weeklyGymSessions: 3, // sessions per week
-};
-
-function getWeeklyGymSessions(entries: DailyEntry[]): {
-  currentWeekSessions: number;
-  weeklySuccessRate: number;
-} {
-  const today = new Date();
-  const startOfWeek = new Date(today);
-  startOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
-  startOfWeek.setHours(0, 0, 0, 0);
-
-  const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6);
-  endOfWeek.setHours(23, 59, 59, 999);
-
-  // Count sessions in current week
-  const currentWeekSessions = entries.filter(entry => {
-    const entryDate = new Date(entry.date);
-    return entry.gymSession && entryDate >= startOfWeek && entryDate <= endOfWeek;
-  }).length;
-
-  // Calculate success rate (weeks with 3+ sessions)
-  const weekMap = new Map<string, number>();
-  
-  entries.forEach(entry => {
-    if (entry.gymSession) {
-      const entryDate = new Date(entry.date);
-      const weekStart = new Date(entryDate);
-      weekStart.setDate(entryDate.getDate() - entryDate.getDay() + (entryDate.getDay() === 0 ? -6 : 1));
-      const weekKey = weekStart.toISOString().split('T')[0];
-      
-      weekMap.set(weekKey, (weekMap.get(weekKey) || 0) + 1);
-    }
-  });
-
-  const successfulWeeks = Array.from(weekMap.values()).filter(sessions => sessions >= GOALS.weeklyGymSessions).length;
-  const totalWeeks = weekMap.size;
-
-  return {
-    currentWeekSessions,
-    weeklySuccessRate: totalWeeks > 0 ? (successfulWeeks / totalWeeks) * 100 : 0
-  };
-}
-
 export default function GoalAchievement({ entries }: GoalAchievementProps) {
-  // Calculate success rates
-  const stats = entries.reduce(
-    (acc, entry) => {
-      // Time in office goal (≥ 9 hours)
-      if (entry.timeInOffice >= GOALS.timeInOffice) {
-        acc.timeSuccess++;
-      }
-      
-      // Calories goal (≤ 2273)
-      if (entry.calories <= GOALS.calories) {
-        acc.caloriesSuccess++;
-      }
-      
-      // Protein goal (≥ 205g)
-      if (entry.protein >= GOALS.protein) {
-        acc.proteinSuccess++;
-      }
-
-      return acc;
-    },
-    { timeSuccess: 0, caloriesSuccess: 0, proteinSuccess: 0 }
-  );
-
-  // Calculate current streaks
-  const currentStreaks = entries
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .reduce(
-      (acc, entry) => {
-        // Time streak
-        if (entry.timeInOffice >= GOALS.timeInOffice) {
-          acc.timeStreak++;
-        } else {
-          acc.timeStreak = 0;
-        }
-
-        // Calories streak
-        if (entry.calories <= GOALS.calories) {
-          acc.caloriesStreak++;
-        } else {
-          acc.caloriesStreak = 0;
-        }
-
-        // Protein streak
-        if (entry.protein >= GOALS.protein) {
-          acc.proteinStreak++;
-        } else {
-          acc.proteinStreak = 0;
-        }
-
-        return acc;
-      },
-      { timeStreak: 0, caloriesStreak: 0, proteinStreak: 0 }
-    );
-
+  const stats = calculateGoalStats(entries);
+  const currentStreaks = calculateCurrentStreaks(entries);
   const totalEntries = entries.length;
   const weeklyGymStats = getWeeklyGymSessions(entries);
 
