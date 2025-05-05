@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { formatDistanceToNow } from 'date-fns';
 import CircularProgress from '@/components/ui/CircularProgress';
-import WeeklyOverview from '@/components/dashboard/WeeklyOverview';
+import { WeeklyOverview } from '@/components/dashboard/weekly-overview';
 import { theme } from '@/styles/theme';
 import GymProgressTracker from '@/components/dashboard/GymProgressTracker';
 import GoalAchievement from '@/components/dashboard/GoalAchievement';
