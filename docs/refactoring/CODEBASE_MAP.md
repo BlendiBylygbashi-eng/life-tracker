@@ -18,10 +18,53 @@ src/
 │   └── page.tsx (11 lines)
 ├── components/
 │   ├── forms/
-│   │   ├── DailyEntryForm.tsx (539 lines) ⚠️
-│   │   ├── GymExerciseForm.tsx (142 lines) ⚠️
-│   │   ├── SupplementForm.tsx (48 lines)
-│   │   └── GymSessionTypeSelector.tsx (42 lines)
+│   │   ├── daily-entry/
+│   │   │   ├── DailyEntryForm.tsx      // Main container (~100 lines)
+│   │   │   ├── index.ts                // Public exports
+│   │   │   ├── state/                  // Form state management
+│   │   │   │   ├── types.ts            // Shared interfaces and types
+│   │   │   │   ├── useFormState.ts     // Form logic and handlers
+│   │   │   │   └── useLocalStorage.ts  // Storage persistence
+│   │   │   ├── sections/               // Form sections
+│   │   │   │   ├── index.ts           // Section exports
+│   │   │   │   ├── date/              // Date input
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   └── DateField.tsx
+│   │   │   │   ├── metrics/           // Daily goals
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── MetricsSection.tsx
+│   │   │   │   │   ├── MetricInput.tsx
+│   │   │   │   │   ├── TimeMetric.tsx
+│   │   │   │   │   ├── CaloriesMetric.tsx
+│   │   │   │   │   └── ProteinMetric.tsx
+│   │   │   │   ├── measurements/      // Body measurements
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── MeasurementsSection.tsx
+│   │   │   │   │   ├── MeasurementInput.tsx
+│   │   │   │   │   ├── BodyWeightInput.tsx
+│   │   │   │   │   └── GripStrengthInput.tsx
+│   │   │   │   ├── gym/              // Workout tracking
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── GymSessionTypeSelector.tsx
+│   │   │   │   │   └── GymExerciseForm.tsx
+│   │   │   │   ├── supplements/      // Supplement tracking
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── SupplementsSection.tsx
+│   │   │   │   │   ├── SupplementCheckbox.tsx
+│   │   │   │   │   ├── CreatineInput.tsx
+│   │   │   │   │   ├── VitaminCInput.tsx
+│   │   │   │   │   └── VitaminDInput.tsx
+│   │   │   │   └── reflection/       // Daily reflection
+│   │   │   │   │   ├── index.ts
+│   │   │   │   │   ├── ReflectionSection.tsx
+│   │   │   │   │   ├── ReflectionTextarea.tsx
+│   │   │   │   │   ├── ActivitiesInput.tsx
+│   │   │   │   │   └── ImprovementsInput.tsx
+│   │   │   └── shared/               // Shared components
+│   │   │       ├── index.ts
+│   │   │       ├── FormLayout.tsx    // Form container and header
+│   │   │       ├── StatusMessage.tsx // Success/error notifications
+│   │   │       └── SubmitButton.tsx  // Submit button with states
 │   ├── dashboard/
 │   │   ├── WeeklyOverview.tsx (280 lines) ⚠️
 │   │   ├── GoalAchievement.tsx (256 lines) ⚠️

@@ -4,7 +4,7 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { useState } from 'react';
 import type { DailyEntry } from '@/types/dashboard';
 import { useRouter } from 'next/navigation';
-import DailyEntryForm from '../forms/DailyEntryForm';
+import { DailyEntryForm } from '@/components/forms/daily-entry';
 import { Dialog } from '@headlessui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 

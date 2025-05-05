@@ -62,3 +62,12 @@ export type ExercisesChangeHandler = (exercises: Array<{
 export type FormChangeHandler = (
   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 ) => void;
+
+// Add this interface with the existing types
+export interface Exercise {
+  id: string;
+  name: string;
+  weight: string;
+  reps: string;
+  order: number;
+}
