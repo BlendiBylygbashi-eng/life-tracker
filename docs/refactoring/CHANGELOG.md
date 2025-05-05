@@ -48,3 +48,14 @@
 - src/components/forms/daily-entry/state/useLocalStorage.ts
 
 ---
+
+## Extract Form State Management
+### Changes
+- Created useFormState hook to manage form state and handlers
+- Centralized form submission logic
+- Integrated with useLocalStorage hook
+
+### Files Modified
+- src/components/forms/daily-entry/state/useFormState.ts
+
+---
