@@ -1,6 +1,6 @@
 # Refactoring Changelog
 
-## [2024-04-05] - Initial Setup
+## Initial Setup
 ### Changes
 - Created refactoring documentation
 - Removed unused empty files
@@ -19,7 +19,7 @@
 
 ---
 
-## [2024-04-05] - Setup DailyEntryForm Refactor Structure
+## Setup DailyEntryForm Refactor Structure
 ### Changes
 - Created initial directory structure for DailyEntryForm modularization
 - Added empty files for state management and shared components
@@ -34,5 +34,17 @@
     - FormLayout.tsx
     - StatusMessage.tsx
     - SubmitButton.tsx
+
+---
+
+## Extract Types and Local Storage Logic
+### Changes
+- Extracted all types and interfaces to types.ts
+- Created useLocalStorage hook for form data persistence
+- Separated storage key constant from main component
+
+### Files Modified
+- src/components/forms/daily-entry/state/types.ts
+- src/components/forms/daily-entry/state/useLocalStorage.ts
 
 ---
