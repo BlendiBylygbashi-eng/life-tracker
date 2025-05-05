@@ -69,3 +69,14 @@
 - src/components/forms/daily-entry/shared/StatusMessage.tsx
 
 ---
+
+## Extract Submit Button Component
+### Changes
+- Created reusable SubmitButton component
+- Extracted loading state and mode-specific text
+- Maintained consistent button styling
+
+### Files Modified
+- src/components/forms/daily-entry/shared/SubmitButton.tsx
+
+---
