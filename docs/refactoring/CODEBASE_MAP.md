@@ -45,10 +45,68 @@ src/
     └── theme.ts (74 lines)
 
 ## Planned Changes
-- [ ] Break down DailyEntryForm.tsx
-- [ ] Extract common dashboard patterns
-- [ ] Modularize API routes
-[etc...]
+
+### 1. DailyEntryForm.tsx Breakdown
+#### Components to Extract
+- [ ] Form Container & Layout
+  - Base form structure
+  - Status messages
+  - Submit button
+
+- [ ] Form State Management
+  - Form data interface
+  - useState and useEffect hooks
+  - Local storage handling
+  - Submit handler
+
+- [ ] Goal Metrics Section
+  - [ ] TimeInOfficeInput
+  - [ ] CaloriesInput
+  - [ ] ProteinInput
+  - [ ] Shared goal progress visualization
+
+- [ ] Measurements Section
+  - [ ] BodyWeightInput
+  - [ ] GripStrengthInput
+
+- [ ] Form Sections (Already Partially Modular)
+  - [ ] GymSessionSection (combining existing components)
+    - GymSessionTypeSelector
+    - GymExerciseForm
+  - [ ] SupplementsSection
+  - [ ] DailyReflectionSection
+    - Activities
+    - Improvements
+
+#### New Directory Structure
+```typescript
+src/components/forms/
+├── daily-entry/                 // New directory for form components
+│   ├── DailyEntryForm.tsx      // Main container (simplified)
+│   ├── state/                  // Form state management
+│   │   ├── types.ts
+│   │   ├── useFormState.ts
+│   │   └── useLocalStorage.ts
+│   ├── sections/               // Form sections
+│   │   ├── GoalMetrics/
+│   │   ├── Measurements/
+│   │   ├── GymSession/
+│   │   ├── Supplements/
+│   │   └── DailyReflection/
+│   └── shared/                 // Shared components
+│       ├── FormLayout.tsx
+│       ├── StatusMessage.tsx
+│       └── SubmitButton.tsx
+```
+
+### 2. Dashboard Components (Next Phase)
+- [ ] Extract common patterns
+- [ ] Modularize visualization components
+
+### 3. API Routes (Final Phase)
+- [ ] Standardize error handling
+- [ ] Extract database operations
+- [ ] Create shared utilities
 
 ## Change History
 ### [Date] Initial Map
