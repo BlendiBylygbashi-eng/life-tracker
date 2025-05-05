@@ -336,8 +336,9 @@ export default function DailyEntryForm({
                   type="number"
                   id="timeInOffice"
                   name="timeInOffice"
-                  value={formData.timeInOffice}
+                  value={formData.timeInOffice || ''}
                   onChange={handleChange}
+                  placeholder="0"
                   step="0.5"
                   min="0"
                   max="24"
@@ -368,8 +369,9 @@ export default function DailyEntryForm({
                   type="number"
                   id="calories"
                   name="calories"
-                  value={formData.calories}
+                  value={formData.calories || ''}
                   onChange={handleChange}
+                  placeholder="0"
                   min="0"
                   className="w-full p-3 bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                   required
@@ -397,8 +399,9 @@ export default function DailyEntryForm({
                   type="number"
                   id="protein"
                   name="protein"
-                  value={formData.protein}
+                  value={formData.protein || ''}
                   onChange={handleChange}
+                  placeholder="0"
                   min="0"
                   className="w-full p-3 bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                   required
