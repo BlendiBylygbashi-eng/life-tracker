@@ -80,3 +80,15 @@
 - src/components/forms/daily-entry/shared/SubmitButton.tsx
 
 ---
+
+## Extract Form Layout Component
+### Changes
+- Created reusable FormLayout component
+- Extracted container styling and header section
+- Added support for create/edit mode titles
+- Maintained consistent form wrapper structure
+
+### Files Modified
+- src/components/forms/daily-entry/shared/FormLayout.tsx
+
+---
