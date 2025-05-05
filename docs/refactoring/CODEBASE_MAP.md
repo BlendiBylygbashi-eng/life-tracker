@@ -66,7 +66,21 @@ src/
 │   │   │       ├── StatusMessage.tsx // Success/error notifications
 │   │   │       └── SubmitButton.tsx  // Submit button with states
 │   ├── dashboard/
-│   │   ├── WeeklyOverview.tsx (280 lines) ⚠️
+│   │   ├── weekly-overview/              // New modular structure
+│   │   │   ├── charts/                   // Chart components
+│   │   │   │   ├── BaseChart.tsx (43 lines)
+│   │   │   │   ├── TimeChart.tsx (22 lines)
+│   │   │   │   ├── CaloriesChart.tsx (22 lines)
+│   │   │   │   ├── ProteinChart.tsx (22 lines)
+│   │   │   │   ├── GripStrengthChart.tsx (22 lines)
+│   │   │   │   ├── BodyWeightChart.tsx (21 lines)
+│   │   │   │   └── index.ts (6 lines)
+│   │   │   ├── utils/                    // Shared utilities
+│   │   │   │   ├── chartConfig.ts (30 lines)
+│   │   │   │   ├── chartDatasets.ts (95 lines)
+│   │   │   │   └── dataTransformers.ts (24 lines)
+│   │   │   ├── WeeklyOverview.tsx (56 lines)
+│   │   │   └── index.ts (2 lines)
 │   │   ├── GoalAchievement.tsx (256 lines) ⚠️
 │   │   ├── GymProgressTracker.tsx (236 lines) ⚠️
 │   │   ├── EntryViewer.tsx (240 lines) ⚠️
@@ -143,8 +157,17 @@ src/components/forms/
 ```
 
 ### 2. Dashboard Components (Next Phase)
-- [ ] Extract common patterns
-- [ ] Modularize visualization components
+✓ WeeklyOverview Component
+- [x] Extract common patterns
+- [x] Modularize visualization components
+- [x] Create reusable BaseChart
+- [x] Separate chart configurations
+- [x] Implement data transformers
+
+Remaining Components to Refactor:
+- [ ] GoalAchievement.tsx
+- [ ] GymProgressTracker.tsx
+- [ ] EntryViewer.tsx
 
 ### 3. API Routes (Final Phase)
 - [ ] Standardize error handling
@@ -152,8 +175,12 @@ src/components/forms/
 - [ ] Create shared utilities
 
 ## Change History
-### [Date] Initial Map
+### [Previous Date] Initial Map
 [Initial codebase map]
 
-### [Future Date] Post-[Component] Refactor
-[Updated map showing changes]
+### [Current Date] Post-WeeklyOverview Refactor
+- Modularized WeeklyOverview component
+- Reduced main component from 280 to 56 lines
+- Created reusable chart components
+- Implemented shared utilities and configurations
+- Improved type safety and maintainability
