@@ -1,4 +1,4 @@
-import DailyEntryForm from '../components/forms/DailyEntryForm';
+import { DailyEntryForm } from '@/components/forms/daily-entry';
 
 export default function Home() {
   return (
