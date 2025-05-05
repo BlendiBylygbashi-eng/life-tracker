@@ -104,3 +104,14 @@
 - src/components/forms/daily-entry/sections/MetricsSection.tsx
 
 ---
+
+## Extract Measurements Section Component
+### Changes
+- Created MeasurementsSection for body weight and grip strength
+- Maintained consistent styling with other sections
+- Preserved input validation and units display
+
+### Files Added
+- src/components/forms/daily-entry/sections/MeasurementsSection.tsx
+
+---
