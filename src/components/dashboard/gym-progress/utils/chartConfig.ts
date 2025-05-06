@@ -33,11 +33,15 @@ export const chartOptions = {
     tooltip: {
       callbacks: {
         label: (context: any) => {
-          const instance = context.chart.data.instances[context.dataIndex];
+          // Access the raw data directly from the dataset
+          const dataset = context.dataset;
+          const dataIndex = context.dataIndex;
+          const rawData = dataset.rawData[dataIndex];
+
           return [
-            `1RM: ${Math.round(instance.oneRepMax)} lbs`,
-            `Weight: ${instance.weight} lbs`,
-            `Reps: ${instance.reps}`,
+            `1RM: ${Math.round(rawData.oneRepMax)} lbs`,
+            `Weight: ${rawData.weight} lbs`,
+            `Reps: ${rawData.reps}`,
           ];
         },
       },
@@ -66,8 +70,9 @@ export function createChartData(exerciseName: string, exerciseHistory: ExerciseH
         backgroundColor: theme.colors.primary[500] + '20',
         tension: 0.4,
         fill: true,
+        // Store the raw data in the dataset for tooltip access
+        rawData: instances,
       }
     ],
-    instances, // Keep reference to original instances for tooltip
   };
 }

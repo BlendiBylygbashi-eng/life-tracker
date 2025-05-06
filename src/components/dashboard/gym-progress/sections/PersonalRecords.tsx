@@ -1,6 +1,5 @@
 import type { ExerciseHistory, PersonalRecords as PersonalRecordsType } from '../utils/types';
 import { PRCard } from '../cards/PRCard';
-import { createChartData } from '../utils/chartConfig';
 
 interface PersonalRecordsProps {
   exerciseNames: string[];
