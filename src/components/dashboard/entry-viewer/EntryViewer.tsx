@@ -10,6 +10,7 @@ import { SupplementsList } from './supplements/SupplementList';
 import { GymSession } from './gym-session/GymSession';
 import { Reflections } from './reflections/Reflections';
 import { EditEntryDialog } from './edit-dialog/EditEntryDialog';
+import { DeleteConfirmDialog } from './delete-dialog/DeleteConfirmDialog';
 
 interface EntryViewerProps {
   entries: DailyEntry[];
@@ -22,6 +23,7 @@ export default function EntryViewer({ entries, currentIndex, onNavigate }: Entry
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   if (!entries || entries.length === 0 || !entries[currentIndex]) {
     return (
@@ -35,11 +37,12 @@ export default function EntryViewer({ entries, currentIndex, onNavigate }: Entry
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === entries.length - 1;
 
-  const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this entry? This cannot be undone.')) {
-      return;
-    }
+  const handleDelete = () => {
+    // Open the custom delete dialog instead of using browser confirm
+    setIsDeleteDialogOpen(true);
+  };
 
+  const confirmDelete = async () => {
     setIsDeleting(true);
     setError(null);
 
@@ -59,6 +62,8 @@ export default function EntryViewer({ entries, currentIndex, onNavigate }: Entry
       console.error('Error deleting entry:', err);
     } finally {
       setIsDeleting(false);
+      // Close the dialog after completion (either success or error)
+      setIsDeleteDialogOpen(false);
     }
   };
 
@@ -99,6 +104,14 @@ export default function EntryViewer({ entries, currentIndex, onNavigate }: Entry
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
         entry={entry}
+      />
+      
+      <DeleteConfirmDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={confirmDelete}
+        entryDate={entry.date}
+        isDeleting={isDeleting}
       />
     </div>
   );
