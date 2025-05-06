@@ -8,6 +8,7 @@ import { DailyEntryForm } from '@/components/forms/daily-entry';
 import { Dialog } from '@headlessui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { EntryHeader } from './header/EntryHeader';
+import { DailyMetrics } from './metrics/DailyMetrics';
 
 interface EntryViewerProps {
   entries: DailyEntry[];
@@ -81,36 +82,8 @@ export default function EntryViewer({ entries, currentIndex, onNavigate }: Entry
       )}
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Daily Metrics */}
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100">
-          <h3 className="font-medium text-gray-900 mb-4">Daily Metrics</h3>
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Time in Office</span>
-              <span className="font-medium">{entry.timeInOffice} hours</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Calories</span>
-              <span className="font-medium">{entry.calories}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Protein</span>
-              <span className="font-medium">{entry.protein}g</span>
-            </div>
-            {entry.bodyWeight && (
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Body Weight</span>
-                <span className="font-medium">{entry.bodyWeight} lbs</span>
-              </div>
-            )}
-            {entry.gripStrength && (
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Grip Strength</span>
-                <span className="font-medium">{entry.gripStrength}kg</span>
-              </div>
-            )}
-          </div>
-        </div>
+        {/* Replace the old metrics section with our new component */}
+        <DailyMetrics entry={entry} />
         
         {/* Supplements */}
         <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100">
