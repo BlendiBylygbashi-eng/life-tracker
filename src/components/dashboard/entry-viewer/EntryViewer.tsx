@@ -4,11 +4,12 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { useState } from 'react';
 import type { DailyEntry } from '@/types/dashboard';
 import { useRouter } from 'next/navigation';
-import { DailyEntryForm } from '@/components/forms/daily-entry';
-import { Dialog } from '@headlessui/react';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { EntryHeader } from './header/EntryHeader';
 import { DailyMetrics } from './metrics/DailyMetrics';
+import { SupplementsList } from './supplements/SupplementList';
+import { GymSession } from './gym-session/GymSession';
+import { Reflections } from './reflections/Reflections';
+import { EditEntryDialog } from './edit-dialog/EditEntryDialog';
 
 interface EntryViewerProps {
   entries: DailyEntry[];
@@ -82,91 +83,23 @@ export default function EntryViewer({ entries, currentIndex, onNavigate }: Entry
       )}
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Replace the old metrics section with our new component */}
+        {/* Daily Metrics */}
         <DailyMetrics entry={entry} />
         
         {/* Supplements */}
-        <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100">
-          <h3 className="font-medium text-gray-900 mb-4">Supplements Taken</h3>
-          <div className="space-y-3">
-            {entry.supplements.map(supp => (
-              <div key={supp.id} className="flex items-center gap-2">
-                <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
-                  supp.taken ? 'bg-green-500' : 'bg-red-500'
-                }`}>
-                  <span className="text-white text-sm">
-                    {supp.taken ? '✓' : '✗'}
-                  </span>
-                </div>
-                <span className="text-gray-700">
-                  {supp.supplementName.replace('_', ' ').toUpperCase()}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <SupplementsList entry={entry} />
         
         {/* Gym Session */}
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-100">
-          <h3 className="font-medium text-gray-900 mb-4">Gym Session</h3>
-          {entry.gymSession ? (
-            <div className="space-y-3">
-              <div className="inline-block px-3 py-1 bg-purple-100 rounded-full text-purple-700 text-sm font-medium mb-2">
-                {entry.gymSession.type.toUpperCase()} Day
-              </div>
-              <div className="space-y-2">
-                {entry.gymSession.exercises.map(ex => (
-                  <div key={ex.id} className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600">{ex.name}</span>
-                    <span className="font-medium">
-                      {ex.weight}lbs × {ex.reps} reps
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <p className="text-gray-500">No gym session recorded</p>
-          )}
-        </div>
+        <GymSession entry={entry} />
       </div>
       
-      {/* Reflections */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg p-4 border border-orange-100">
-          <h3 className="font-medium text-gray-900 mb-3">Activities</h3>
-          <p className="text-gray-600 whitespace-pre-wrap">{entry.activities}</p>
-        </div>
-        <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-lg p-4 border border-teal-100">
-          <h3 className="font-medium text-gray-900 mb-3">Areas for Improvement</h3>
-          <p className="text-gray-600 whitespace-pre-wrap">{entry.improvements}</p>
-        </div>
-      </div>
+      <Reflections entry={entry} />
 
-      <Dialog
-        open={isEditing}
+      <EditEntryDialog
+        isOpen={isEditing}
         onClose={() => setIsEditing(false)}
-        className="relative z-40"
-      >
-        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-        
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="mx-auto max-w-3xl w-full bg-white rounded-xl shadow-lg">
-            <div className="max-h-[90vh] overflow-y-auto">
-              <DailyEntryForm
-                mode="edit"
-                initialData={entry}
-                onSuccess={() => {
-                  router.refresh();
-                  setTimeout(() => {
-                    setIsEditing(false);
-                  }, 1500);
-                }}
-              />
-            </div>
-          </Dialog.Panel>
-        </div>
-      </Dialog>
+        entry={entry}
+      />
     </div>
   );
 }
