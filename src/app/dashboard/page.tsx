@@ -6,7 +6,7 @@ import { theme } from '@/styles/theme';
 import { GymProgressTracker } from '@/components/dashboard/gym-progress';
 import { GoalAchievement } from '@/components/dashboard/goal-achievement';
 import type { DailyEntry, GymSession } from '@/types/dashboard';
-import EntryViewerContainer from '@/components/dashboard/EntryViewerContainer';
+import { EntryViewerContainer } from '@/components/dashboard/entry-viewer';
 
 // Constants for goals (same as in DailyEntryForm)
 const GOALS = {

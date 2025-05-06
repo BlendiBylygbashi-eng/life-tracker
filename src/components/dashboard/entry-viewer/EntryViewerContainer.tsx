@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { DailyEntry } from '@/types/dashboard';
-import EntryViewer from './EntryViewer';
+import { EntryViewer } from '.';
 
 interface EntryViewerContainerProps {
   entries: DailyEntry[];
