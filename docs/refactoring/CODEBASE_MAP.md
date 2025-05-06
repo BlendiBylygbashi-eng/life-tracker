@@ -7,8 +7,12 @@ src/
 │   ├── api/
 │   │   └── daily-entry/
 │   │       ├── [id]/
-│   │       │   └── route.ts (164 lines) ⚠️
-│   │       └── route.ts (69 lines)
+│   │       │   └── route.ts (31 lines)
+│   │       ├── route.ts (69 lines)
+│   │       └── utils/
+│   │           ├── db-operations.ts (120 lines)
+│   │           ├── error-handling.ts (19 lines)
+│   │           └── transformers.ts (72 lines)
 │   ├── dashboard/
 │   │   ├── page.tsx (57 lines)
 │   │   ├── utils/
@@ -137,7 +141,9 @@ src/
 │   │   │   │   └── Reflections.tsx (20 lines)
 │   │   │   ├── edit-dialog/            // Edit dialog components
 │   │   │   │   └── EditEntryDialog.tsx (41 lines)
-│   │   │   ├── EntryViewer.tsx (105 lines)
+│   │   │   ├── delete-dialog/          // Delete confirmation dialog
+│   │   │   │   └── DeleteConfirmDialog.tsx (70 lines)
+│   │   │   ├── EntryViewer.tsx (119 lines)
 │   │   │   ├── EntryViewerContainer.tsx (22 lines)
 │   │   │   └── index.ts (2 lines)
 │   └── ui/
@@ -244,9 +250,10 @@ Remaining Components to Refactor:
 - None for dashboard section
 
 ### 3. API Routes (Final Phase)
-- [ ] Standardize error handling
-- [ ] Extract database operations
-- [ ] Create shared utilities
+✓ API Route Refactoring
+- [x] Standardize error handling
+- [x] Extract database operations
+- [x] Create shared utilities
 
 ## Change History
 ### [Previous Date] Initial Map
@@ -295,3 +302,13 @@ Remaining Components to Refactor:
 - Extracted constants into utils/constants.ts
 - Created reusable GoalProgressRing and GoalsProgress components
 - Improved code organization and maintainability
+
+### [Current Date] Post-API Routes Refactor
+- Completely modularized daily-entry API routes
+- Reduced route handler from 164 lines to 31 lines (81% reduction)
+- Created dedicated utility modules:
+  - db-operations.ts for database interactions
+  - error-handling.ts for standardized responses
+  - transformers.ts for type-safe data conversion
+- Added custom DeleteConfirmDialog to replace browser confirm
+- Improved code organization, type safety, and user experience
