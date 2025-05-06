@@ -14,7 +14,7 @@ interface StrengthStandardsProps {
   bodyWeight: number;
 }
 
-export default function StrengthStandards({ personalRecords, bodyWeight }: StrengthStandardsProps) {
+export function StrengthStandards({ personalRecords, bodyWeight }: StrengthStandardsProps) {
   if (!bodyWeight) {
     return (
       <div className="bg-yellow-50 p-4 rounded-lg">
