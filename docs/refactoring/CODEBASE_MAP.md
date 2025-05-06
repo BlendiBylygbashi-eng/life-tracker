@@ -118,8 +118,22 @@ src/
 │   │   │   │   └── types.ts           // Type definitions
 │   │   │   ├── GymProgressTracker.tsx  // Main container (reduced)
 │   │   │   └── index.ts               // Public exports
-│   │   ├── EntryViewer.tsx (240 lines) ⚠️
-│   │   └── EntryViewerContainer.tsx (22 lines)
+│   │   ├── entry-viewer/               // Daily entry viewing components
+│   │   │   ├── header/                 // Header components 
+│   │   │   │   └── EntryHeader.tsx (82 lines)
+│   │   │   ├── metrics/                // Metrics components
+│   │   │   │   └── DailyMetrics.tsx (39 lines)
+│   │   │   ├── supplements/            // Supplements components
+│   │   │   │   └── SupplementList.tsx (29 lines)
+│   │   │   ├── gym-session/            // Gym session components
+│   │   │   │   └── GymSession.tsx (32 lines)
+│   │   │   ├── reflections/            // Reflections components
+│   │   │   │   └── Reflections.tsx (20 lines)
+│   │   │   ├── edit-dialog/            // Edit dialog components
+│   │   │   │   └── EditEntryDialog.tsx (41 lines)
+│   │   │   ├── EntryViewer.tsx (105 lines)
+│   │   │   ├── EntryViewerContainer.tsx (22 lines)
+│   │   │   └── index.ts (2 lines)
 │   └── ui/
 │       ├── ParticleBackground.tsx (104 lines)
 │       ├── CircularProgress.tsx (89 lines)
@@ -204,9 +218,18 @@ src/components/forms/
 - [x] Separate utility functions
 - [x] Improve type safety with shared interfaces
 
+✓ EntryViewer Component
+- [x] Create modular directory structure
+- [x] Extract header component
+- [x] Extract metrics component
+- [x] Extract supplements component
+- [x] Extract gym session component
+- [x] Extract reflections component
+- [x] Extract edit dialog component
+- [x] Reduce main component complexity
+
 Remaining Components to Refactor:
 - [ ] GymProgressTracker.tsx
-- [ ] EntryViewer.tsx
 
 ### 3. API Routes (Final Phase)
 - [ ] Standardize error handling
@@ -217,21 +240,21 @@ Remaining Components to Refactor:
 ### [Previous Date] Initial Map
 [Initial codebase map]
 
-### [Current Date] Post-WeeklyOverview Refactor
+### [Previous Date] Post-WeeklyOverview Refactor
 - Modularized WeeklyOverview component
 - Reduced main component from 280 to 56 lines
 - Created reusable chart components
 - Implemented shared utilities and configurations
 - Improved type safety and maintainability
 
-### [Current Date] Post-GoalAchievement Refactor
+### [Previous Date] Post-GoalAchievement Refactor
 - Modularized GoalAchievement component
 - Reduced main component from 256 to 62 lines
 - Created reusable BaseGoalCard pattern
 - Implemented shared utilities and goal configurations
 - Improved type safety and maintainability
 
-### [Current Date] Post-GymProgressTracker Refactor
+### [Previous Date] Post-GymProgressTracker Refactor
 - Completely modularized GymProgressTracker component
 - Reduced main component from 236 lines to ~36 lines
 - Created modular directory structure with clear separation of concerns
@@ -239,3 +262,16 @@ Remaining Components to Refactor:
 - Created dedicated section components
 - Moved and updated StrengthStandards to gym-progress module
 - Improved type safety and maintainability
+
+### [Current Date] Post-EntryViewer Refactor
+- Completely modularized EntryViewer component
+- Reduced main component from 240 lines to 105 lines
+- Created dedicated components for each section:
+  - EntryHeader (navigation and actions)
+  - DailyMetrics (metrics display)
+  - SupplementsList (supplements tracking)
+  - GymSession (workout display)
+  - Reflections (activities and improvements)
+  - EditEntryDialog (form dialog)
+- Organized components into a logical directory structure
+- Improved code maintainability and readability
