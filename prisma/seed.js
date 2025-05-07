@@ -25,8 +25,8 @@ async function main() {
           type: "push",
           exercises: {
             create: [
-              { name: "Bench Press", weight: 135, reps: 10, order: 0 },
-              { name: "Shoulder Press", weight: 95, reps: 10, order: 1 }
+              { name: "Flat Bench Press", weight: 135, reps: 10, order: 0 },
+              { name: "Incline Dumbbell Press", weight: 95, reps: 10, order: 1 }
             ]
           }
         }

@@ -36,6 +36,15 @@ interface WeeklyOverviewProps {
 }
 
 export default function WeeklyOverview({ entries }: WeeklyOverviewProps) {
+  if (!entries || entries.length === 0) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-6 relative z-10">
+        <h2 className="text-xl font-semibold mb-6">Weekly Overview</h2>
+        <p className="text-gray-500 text-center py-4">No data available for charts</p>
+      </div>
+    );
+  }
+  
   const sortedEntries = sortEntriesByDate(entries);
   const sortedEntriesWithTimestamp = addDisplayLabels(sortedEntries);
   const labels = getLabels(sortedEntriesWithTimestamp);

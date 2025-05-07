@@ -5,8 +5,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("POSTGRES_DATABASE_URL")
 }
 
 model DailyEntry {
@@ -23,6 +23,8 @@ model DailyEntry {
   gymSession    GymSession?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+
+  @@map("daily_entry")
 }
 
 model SupplementLog {
@@ -31,6 +33,8 @@ model SupplementLog {
   entryId        String
   supplementName String      // Will be either 'creatine', 'vitamin_c', or 'vitamin_d'
   taken          Boolean
+
+  @@map("supplement_log")
 }
 
 model GymSession {
@@ -39,6 +43,8 @@ model GymSession {
   entryId   String        @unique  // One-to-one with DailyEntry
   type      String        // Will be either 'push', 'pull', 'legs', or 'other'
   exercises GymExercise[]
+
+  @@map("gym_session")
 }
 
 model GymExercise {
@@ -49,4 +55,6 @@ model GymExercise {
   weight      Float
   reps        Int
   order       Int
+
+  @@map("gym_exercise")
 }

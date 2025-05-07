@@ -12,6 +12,15 @@ interface GoalsProgressProps {
 }
 
 export function GoalsProgress({ entry, goals }: GoalsProgressProps) {
+  if (!entry) {
+    return (
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 mb-8">
+        <h2 className="text-xl font-semibold mb-6">Daily Goals Progress</h2>
+        <p className="text-gray-500 text-center py-4">No recent entries available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 mb-8">
       <h2 className="text-xl font-semibold mb-6">Daily Goals Progress</h2>

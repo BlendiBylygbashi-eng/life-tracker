@@ -7,6 +7,16 @@ import { StrengthSection } from './sections/StrengthSection';
 import { RecordsSection } from './sections/RecordsSection';
 
 export default function GymProgressTracker({ sessions }: GymProgressTrackerProps) {
+  if (!sessions || sessions.length === 0) {
+    return (
+      <Container title="Strength Progress">
+        <div className="text-gray-500 text-center py-4">
+          No gym sessions recorded yet
+        </div>
+      </Container>
+    );
+  }
+
   const {
     selectedExercise,
     exerciseNames,

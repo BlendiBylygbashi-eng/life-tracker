@@ -1,4 +1,5 @@
 import type { DailyEntryFormData } from './types';
+import { useState } from 'react';
 
 const STORAGE_KEY = 'daily-entry-form-data';
 
@@ -22,12 +23,26 @@ const DEFAULT_FORM_DATA: DailyEntryFormData = {
   },
 };
 
-export function useLocalStorage(mode: 'create' | 'edit') {
+export function useLocalStorage<T>(key: string, initialValue: T) {
+  const isClient = typeof window !== 'undefined';
+  
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    if (!isClient) return initialValue;
+    
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.log(error);
+      return initialValue;
+    }
+  });
+
   // Get initial data from localStorage
   const getStoredData = (): DailyEntryFormData => {
     if (typeof window === 'undefined') return DEFAULT_FORM_DATA;
     
-    const savedData = localStorage.getItem(STORAGE_KEY);
+    const savedData = localStorage.getItem(key);
     if (!savedData) return DEFAULT_FORM_DATA;
 
     try {
@@ -47,20 +62,20 @@ export function useLocalStorage(mode: 'create' | 'edit') {
 
   // Save data to localStorage
   const saveToStorage = (data: DailyEntryFormData) => {
-    if (mode === 'create') {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    if (key === 'create') {
+      localStorage.setItem(key, JSON.stringify(data));
     }
   };
 
   // Clear storage
   const clearStorage = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(key);
   };
 
   return {
     getStoredData,
     saveToStorage,
     clearStorage,
-    STORAGE_KEY
+    key
   };
 }
