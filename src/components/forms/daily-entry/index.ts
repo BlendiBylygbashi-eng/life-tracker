@@ -1,1 +1,1 @@
-export { default as DailyEntryForm } from './DailyEntryForm';
+export { default as DailyEntryForm } from './ClientForm';

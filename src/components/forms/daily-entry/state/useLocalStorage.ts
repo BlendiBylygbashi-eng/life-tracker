@@ -1,5 +1,5 @@
 import type { DailyEntryFormData } from './types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const STORAGE_KEY = 'daily-entry-form-data';
 
@@ -23,27 +23,31 @@ const DEFAULT_FORM_DATA: DailyEntryFormData = {
   },
 };
 
-export function useLocalStorage<T>(key: string, initialValue: T) {
-  const isClient = typeof window !== 'undefined';
+export function useLocalStorage(mode: string, initialValue?: DailyEntryFormData) {
+  const key = STORAGE_KEY;
+  const defaultValue = initialValue || DEFAULT_FORM_DATA;
   
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    if (!isClient) return initialValue;
-    
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.log(error);
-      return initialValue;
+  const [storedValue, setStoredValue] = useState<DailyEntryFormData>(defaultValue);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const item = window.localStorage.getItem(key);
+        if (item) {
+          const parsed = JSON.parse(item);
+          setStoredValue(parsed);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
-  });
+  }, [key]);
 
-  // Get initial data from localStorage
   const getStoredData = (): DailyEntryFormData => {
-    if (typeof window === 'undefined') return DEFAULT_FORM_DATA;
+    if (typeof window === 'undefined') return defaultValue;
     
     const savedData = localStorage.getItem(key);
-    if (!savedData) return DEFAULT_FORM_DATA;
+    if (!savedData) return defaultValue;
 
     try {
       const parsed = JSON.parse(savedData);
@@ -56,18 +60,16 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       };
     } catch (e) {
       console.error('Failed to parse saved form data:', e);
-      return DEFAULT_FORM_DATA;
+      return defaultValue;
     }
   };
 
-  // Save data to localStorage
   const saveToStorage = (data: DailyEntryFormData) => {
-    if (key === 'create') {
+    if (mode === 'create') {
       localStorage.setItem(key, JSON.stringify(data));
     }
   };
 
-  // Clear storage
   const clearStorage = () => {
     localStorage.removeItem(key);
   };
@@ -79,3 +81,5 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     key
   };
 }
+
+export { DEFAULT_FORM_DATA };

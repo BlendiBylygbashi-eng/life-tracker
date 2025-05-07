@@ -7,7 +7,7 @@ import type {
   GymSessionTypeChangeHandler,
   ExercisesChangeHandler
 } from './types';
-import { useLocalStorage } from './useLocalStorage';
+import { useLocalStorage, DEFAULT_FORM_DATA } from './useLocalStorage';
 import type { WorkoutType } from '@/lib/workoutData';
 
 export function useFormState({ 
@@ -15,7 +15,7 @@ export function useFormState({
   onSuccess, 
   mode = 'create' 
 }: DailyEntryFormProps) {
-  const { getStoredData, saveToStorage, clearStorage } = useLocalStorage(mode);
+  const { getStoredData, saveToStorage, clearStorage } = useLocalStorage(mode, DEFAULT_FORM_DATA);
 
   // Main form state
   const [formData, setFormData] = useState<DailyEntryFormData>(() => {
